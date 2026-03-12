@@ -12,7 +12,7 @@ function mytheme_setup() {
 add_action('after_setup_theme', 'mytheme_setup');
 
 function mytheme_enqueue_styles() {
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri());
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '1.1');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 

@@ -19,7 +19,7 @@ body {
 }
 
 a {
-    color: #0073aa;
+    color: #2D62A5;
     text-decoration: none;
 }
 
@@ -42,21 +42,28 @@ a:hover {
 }
 
 .site-title {
-    font-size: 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .site-title a {
-    color: #000;
+    color: #2D62A5;
 }
 
 .site-title a:hover {
     text-decoration: none;
-    opacity: 0.8;
+    color: #B9313A;
 }
 
 .site-description {
-    color: #666;
-    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #888;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
 }
 
 /* Navigation */
@@ -71,18 +78,22 @@ a:hover {
 }
 
 .main-nav a {
-    color: #000;
-    font-size: 0.95rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
     padding: 10px 16px;
     display: block;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: color 0.2s;
 }
 
 .main-nav a:hover {
-    color: #000;
-    background-color: red;
+    color: #2D62A5;
     text-decoration: underline;
+    text-decoration-color: #bbb;
+    text-underline-offset: 4px;
 }
 
 /* Dropdown Sub-menus */
@@ -104,15 +115,32 @@ a:hover {
 }
 
 .main-nav .submenu a {
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
     padding: 10px 16px;
     white-space: nowrap;
     border-bottom: 1px solid #eee;
 }
 
 .main-nav .submenu a:hover {
-    color: #000;
-    background-color: red;
+    color: #2D62A5;
+    background-color: #f5f5f5;
     text-decoration: underline;
+    text-decoration-color: #bbb;
+    text-underline-offset: 4px;
+}
+
+/* Slogan Ribbon */
+.slogan-ribbon {
+    background: #B9313A;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-align: center;
+    padding: 8px 0;
 }
 
 /* Hero Box */
@@ -209,12 +237,12 @@ a:hover {
 }
 
 .col-box-left {
-    background: #1a1a2e;
+    background: #2D62A5;
     color: #fff;
 }
 
 .col-box-right {
-    background: #16213e;
+    background: #245089;
     color: #fff;
 }
 
@@ -329,12 +357,71 @@ a:hover {
 
 /* Footer */
 .site-footer {
-    background: #23282d;
-    color: #aaa;
-    padding: 20px 0;
-    text-align: center;
-    font-size: 0.85rem;
+    background: #2D62A5;
+    color: #ccc;
     margin-top: 40px;
+}
+
+.footer-columns {
+    display: flex;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 20px 40px;
+}
+
+.footer-col {
+    flex: 1;
+}
+
+.footer-col h3 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #B9313A;
+}
+
+.footer-col p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #aaa;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.footer-col ul a {
+    color: #aaa;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-col ul a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-address {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+.footer-bottom {
+    background: #1E4D80;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 0.85rem;
+    color: #666;
 }
 
 /* =====================
@@ -361,7 +448,7 @@ a:hover {
 .cal-month-label {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #1a1a2e;
+    color: #2D62A5;
     text-align: center;
     margin-bottom: 10px;
 }
@@ -399,13 +486,13 @@ a:hover {
 }
 
 .cal-day.is-today {
-    background: #1a1a2e;
+    background: #2D62A5;
     color: #fff;
     font-weight: 700;
 }
 
 .cal-day.has-events {
-    background: #c0392b;
+    background: #B9313A;
     color: #fff;
     font-weight: 700;
     cursor: pointer;
@@ -413,16 +500,16 @@ a:hover {
 }
 
 .cal-day.has-events:hover {
-    background: #e74c3c;
+    background: #c9414a;
 }
 
 .cal-day.has-events.is-today {
-    background: #c0392b;
-    box-shadow: inset 0 0 0 2px #1a1a2e;
+    background: #B9313A;
+    box-shadow: inset 0 0 0 2px #2D62A5;
 }
 
 .cal-day.is-selected {
-    outline: 3px solid #1a1a2e;
+    outline: 3px solid #2D62A5;
     outline-offset: -3px;
 }
 
@@ -443,7 +530,7 @@ a:hover {
 .cal-panel-title {
     font-size: 1.2rem;
     margin-bottom: 15px;
-    color: #1a1a2e;
+    color: #2D62A5;
 }
 
 .cal-event-card {
@@ -463,11 +550,11 @@ a:hover {
 }
 
 .cal-event-card h4 a {
-    color: #1a1a2e;
+    color: #2D62A5;
 }
 
 .cal-event-card h4 a:hover {
-    color: #c0392b;
+    color: #B9313A;
 }
 
 .cal-event-time,
@@ -488,7 +575,7 @@ a:hover {
 .page-title {
     font-size: 2rem;
     margin-bottom: 25px;
-    color: #1a1a2e;
+    color: #2D62A5;
 }
 
 .events-listing {
@@ -508,7 +595,7 @@ a:hover {
 }
 
 .event-date-badge {
-    background: #1a1a2e;
+    background: #2D62A5;
     color: #fff;
     border-radius: 4px;
     padding: 10px 14px;
@@ -537,11 +624,11 @@ a:hover {
 }
 
 .event-card-title a {
-    color: #1a1a2e;
+    color: #2D62A5;
 }
 
 .event-card-title a:hover {
-    color: #c0392b;
+    color: #B9313A;
     text-decoration: none;
 }
 
@@ -571,12 +658,12 @@ a:hover {
 .single-event .post-title {
     font-size: 2rem;
     margin-bottom: 15px;
-    color: #1a1a2e;
+    color: #2D62A5;
 }
 
 .event-meta-box {
     background: #f5f5f5;
-    border-left: 4px solid #1a1a2e;
+    border-left: 4px solid #2D62A5;
     padding: 15px 20px;
     margin-bottom: 25px;
     border-radius: 0 4px 4px 0;
@@ -600,4 +687,135 @@ a:hover {
     width: 100%;
     height: auto;
     border-radius: 4px;
+}
+
+/* =====================
+   Board of Directors
+   ===================== */
+.board-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.board-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.board-photo-placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    margin: 0 auto 20px;
+}
+
+.board-card img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+.board-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2D62A5;
+    margin-bottom: 4px;
+}
+
+.board-role {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* =====================
+   Programs Page
+   ===================== */
+.programs-intro {
+    font-size: 1.05rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 35px;
+    max-width: 700px;
+}
+
+.programs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.program-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s;
+}
+
+.program-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.program-img-placeholder {
+    width: 100%;
+    height: 180px;
+    background: #e0e0e0;
+}
+
+.program-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.program-info {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.program-info h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2D62A5;
+    margin-bottom: 10px;
+}
+
+.program-info p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    flex: 1;
+}
+
+.program-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #B9313A;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+}
+
+.program-link:hover {
+    color: #2D62A5;
+    text-decoration: underline;
+    text-decoration-color: #bbb;
+    text-underline-offset: 3px;
 }

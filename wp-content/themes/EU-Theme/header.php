@@ -44,6 +44,9 @@
                         <li><a href="running.php">Bike Racing</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="<?php echo esc_url(site_url('/events-listing/')); ?>">EVENTS</a>
+                </li>
                 <li class="dropdown">
                     <a href="programs.php">NEWS ▼</a>
                     <ul class="submenu">

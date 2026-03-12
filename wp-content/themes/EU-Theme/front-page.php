@@ -49,7 +49,7 @@
     <div class="col-box col-box-right">
         <h2>Upcoming Events</h2>
         <p>Check out our calendar of races, training camps, and community gatherings happening throughout the season.</p>
-        <a href="#" class="box-link">View Events &rarr;</a>
+        <a href="<?php echo esc_url(site_url('/calendar/')); ?>" class="box-link">View Events &rarr;</a>
     </div>
 </section>
 

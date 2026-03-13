@@ -188,3 +188,103 @@ function eu_enqueue_calendar_assets() {
     wp_localize_script('eu-calendar', 'euCalendarData', ['events' => $events]);
 }
 add_action('wp_enqueue_scripts', 'eu_enqueue_calendar_assets');
+
+// --- News Categories ---
+function eu_create_news_categories() {
+    $categories = [
+        ['name' => 'Program News',    'slug' => 'program-news'],
+        ['name' => 'Race Event News', 'slug' => 'race-event-news'],
+        ['name' => 'Other News',      'slug' => 'other-news'],
+    ];
+
+    foreach ($categories as $cat) {
+        if (!term_exists($cat['slug'], 'category')) {
+            wp_insert_term($cat['name'], 'category', ['slug' => $cat['slug']]);
+        }
+    }
+}
+add_action('init', 'eu_create_news_categories');
+
+// Auto-create News page
+function eu_create_news_page() {
+    if (get_option('eu_news_page_created')) return;
+
+    $exists = get_page_by_path('news');
+    if (!$exists) {
+        $id = wp_insert_post([
+            'post_title'  => 'News',
+            'post_name'   => 'news',
+            'post_status' => 'publish',
+            'post_type'   => 'page',
+        ]);
+        if ($id && !is_wp_error($id)) {
+            update_post_meta($id, '_wp_page_template', 'page-news.php');
+        }
+    }
+
+    update_option('eu_news_page_created', true);
+}
+add_action('init', 'eu_create_news_page');
+
+// Auto-create Juniors page
+function eu_create_juniors_page() {
+    if (get_option('eu_juniors_page_created')) return;
+
+    $exists = get_page_by_path('juniors');
+    if (!$exists) {
+        $id = wp_insert_post([
+            'post_title'  => 'Juniors',
+            'post_name'   => 'juniors',
+            'post_status' => 'publish',
+            'post_type'   => 'page',
+        ]);
+        if ($id && !is_wp_error($id)) {
+            update_post_meta($id, '_wp_page_template', 'page-juniors.php');
+        }
+    }
+
+    update_option('eu_juniors_page_created', true);
+}
+add_action('init', 'eu_create_juniors_page');
+
+// Auto-create Youth page
+function eu_create_youth_page() {
+    if (get_option('eu_youth_page_created')) return;
+
+    $exists = get_page_by_path('youth');
+    if (!$exists) {
+        $id = wp_insert_post([
+            'post_title'  => 'Youth',
+            'post_name'   => 'youth',
+            'post_status' => 'publish',
+            'post_type'   => 'page',
+        ]);
+        if ($id && !is_wp_error($id)) {
+            update_post_meta($id, '_wp_page_template', 'page-youth.php');
+        }
+    }
+
+    update_option('eu_youth_page_created', true);
+}
+add_action('init', 'eu_create_youth_page');
+
+// Auto-create Paddling page
+function eu_create_paddling_page() {
+    if (get_option('eu_paddling_page_created')) return;
+
+    $exists = get_page_by_path('paddling');
+    if (!$exists) {
+        $id = wp_insert_post([
+            'post_title'  => 'Paddling',
+            'post_name'   => 'paddling',
+            'post_status' => 'publish',
+            'post_type'   => 'page',
+        ]);
+        if ($id && !is_wp_error($id)) {
+            update_post_meta($id, '_wp_page_template', 'page-paddling.php');
+        }
+    }
+
+    update_option('eu_paddling_page_created', true);
+}
+add_action('init', 'eu_create_paddling_page');

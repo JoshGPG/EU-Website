@@ -25,7 +25,7 @@
             <ul>
                 <li><a href="<?php echo esc_url(site_url('/board-of-directors/')); ?>">Board of Directors</a></li>
                 <li><a href="#">Staff</a></li>
-                <li><a href="#">Coaches</a></li>
+                <li><a href="<?php echo esc_url(site_url('/coaches/')); ?>">Coaches</a></li>
             </ul>
         </div>
 
@@ -37,7 +37,7 @@
                 <li><a href="tel:+16128503937">(612) 850-3937</a></li>
                 <li><a href="https://www.facebook.com/EnduranceUntd/" target="_blank" rel="noopener">Facebook</a></li>
                 <li><a href="https://www.instagram.com/enduranceunited/" target="_blank" rel="noopener">Instagram</a></li>
-                <li><a href="#">YouTube</a></li>
+                <li><a href="https://www.youtube.com/channel/UCsrv65x0Vzscsh3vRJk_PUA" target="_blank" rel="noopener">YouTube</a></li>
             </ul>
             <p class="footer-address">713 Minnehaha Ave. East, Suite 216<br>Saint Paul, MN 55106, USA</p>
         </div>

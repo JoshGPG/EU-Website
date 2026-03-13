@@ -5,72 +5,44 @@
 get_header();
 ?>
 
-<h1 class="page-title">Our Programs</h1>
-<p class="programs-intro">Explore everything Endurance United has to offer. From water to trails to snow, there's a program for everyone.</p>
+<h1 class="page-title">Programs</h1>
+<p class="page-intro">Beyond Nordic skiing, Endurance United offers a variety of outdoor programs to keep you active all year long — on the water, on the trails, and on two wheels.</p>
 
-<div class="programs-grid">
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Paddling</h2>
-            <p>Get out on the water with our paddling program for all experience levels.</p>
-            <a href="#" class="program-link">Learn More</a>
-        </div>
-    </div>
+<section class="showcase-grid showcase-grid--summary">
 
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Learn to Rollerski</h2>
-            <p>Build your technique and confidence on rollerskis with guided instruction.</p>
-            <a href="#" class="program-link">Learn More</a>
+    <a href="<?php echo esc_url(site_url('/paddling/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #2c3e50;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Paddling</h3>
+            <p class="showcase-card-desc">Kayak, SUP, and canoe throughout the summer at Long Lake. Programs for juniors and adults of all experience levels.</p>
+            <span class="showcase-card-btn">Learn More</span>
         </div>
-    </div>
+    </a>
 
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Women's Mountain Bike Fitness Rides</h2>
-            <p>Join a supportive group of women for mountain bike rides focused on fitness and fun.</p>
-            <a href="#" class="program-link">Learn More</a>
+    <a href="<?php echo esc_url(site_url('/cycling/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #B9313A;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Cycling</h3>
+            <p class="showcase-card-desc">Women&rsquo;s mountain bike fitness rides and youth MTB through our Shifting Gears program. All skill levels welcome.</p>
+            <span class="showcase-card-btn">Learn More</span>
         </div>
-    </div>
+    </a>
 
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Trail Running / Hiking Group</h2>
-            <p>Hit the trails with a community of runners and hikers of all paces.</p>
-            <a href="#" class="program-link">Learn More</a>
+    <a href="<?php echo esc_url(site_url('/trail-running/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #245089;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Trail Running</h3>
+            <p class="showcase-card-desc">Summer trail running and hiking group for all paces. Explore local trails with a supportive community of runners.</p>
+            <span class="showcase-card-btn">Learn More</span>
         </div>
-    </div>
+    </a>
 
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Adult Year-Round Nordic</h2>
-            <p>Train year-round with our adult nordic skiing program for every season.</p>
-            <a href="#" class="program-link">Learn More</a>
-        </div>
-    </div>
-
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Summer EU Skiwerx</h2>
-            <p>Summer dryland training to keep your nordic skills sharp in the off-season.</p>
-            <a href="#" class="program-link">Learn More</a>
-        </div>
-    </div>
-
-    <div class="program-card">
-        <div class="program-img-placeholder"></div>
-        <div class="program-info">
-            <h2>Spring Juniors</h2>
-            <p>A spring program designed for junior athletes to stay active and build fitness.</p>
-            <a href="#" class="program-link">Learn More</a>
-        </div>
-    </div>
-</div>
+</section>
 
 <?php get_footer(); ?>

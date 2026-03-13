@@ -15,40 +15,10 @@ get_header();
 </div>
 
 <h2 class="nordic-section-title">Open for Registration</h2>
-<div class="nordic-programs-list">
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">EU SkiWerx Summer</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">EU SkiWerx Adventure Skis</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">EU SkiWerx Learn to Rollerski Clinic</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-</div>
+<?php eu_render_program_boxes('youth', 'open'); ?>
 
 <h2 class="nordic-section-title closed">Closed for the Season</h2>
 <p class="nordic-closed-note">Sessions below are closed for the 2025 season.</p>
-<div class="nordic-programs-list closed">
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">EU SkiWerx Fall</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">EU SkiWerx Winter</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">56K Rollerski Training Day/Fundraiser</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">Fall Apple Picking Adventure Ski</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-</div>
+<?php eu_render_program_boxes('youth', 'closed'); ?>
 
 <?php get_footer(); ?>

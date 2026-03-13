@@ -16,40 +16,10 @@ get_header();
 <p class="juniors-subscribe-note">Keep informed by subscribing to EU junior emails below.</p>
 
 <h2 class="nordic-section-title">Open for Registration</h2>
-<div class="nordic-programs-list">
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">Spring Junior Training</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-</div>
+<?php eu_render_program_boxes('juniors', 'open'); ?>
 
 <h2 class="nordic-section-title closed">Closed for the Season</h2>
 <p class="nordic-closed-note">Programs listed below are closed for the season.</p>
-<div class="nordic-programs-list closed">
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">D-Team</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">Summer Junior Training</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">Junior Camps</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">56K Rollerski Training Day/Fundraiser</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">Fall Junior Training</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-    <a href="#" class="nordic-program-item">
-        <span class="nordic-program-name">EU Junior Winter Race Season</span>
-        <span class="nordic-program-arrow">&rarr;</span>
-    </a>
-</div>
+<?php eu_render_program_boxes('juniors', 'closed'); ?>
 
 <?php get_footer(); ?>

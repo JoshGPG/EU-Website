@@ -20,7 +20,7 @@
             <nav class="main-nav">
             <ul>
                 <li class="dropdown">
-                    <a href="nordic.php">NORDIC ▼</a>
+                    <a href="<?php echo esc_url(site_url('/nordic/')); ?>">NORDIC ▼</a>
                     <ul class="submenu">
                         <li><a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>">Adult</a></li>
                         <li><a href="<?php echo esc_url(site_url('/juniors/')); ?>">Juniors</a></li>
@@ -28,19 +28,20 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="programs.php">PROGRAMS ▼</a>
+                    <a href="<?php echo esc_url(site_url('/programs/')); ?>">PROGRAMS ▼</a>
                     <ul class="submenu">
                         <li><a href="<?php echo esc_url(site_url('/paddling/')); ?>">Paddling</a></li>
-                        <li><a href="cycling.php">Cycling</a></li>
-                        <li><a href="running.php">Trail Running</a></li>
+                        <li><a href="<?php echo esc_url(site_url('/cycling/')); ?>">Cycling</a></li>
+                        <li><a href="<?php echo esc_url(site_url('/trail-running/')); ?>">Trail Running</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a href="programs.php">RACE EVENTS ▼</a>
+                <li class="dropdown uts-nav">
+                    <a href="<?php echo esc_url(site_url('/urban-trail-series/')); ?>">URBAN TRAIL SERIES ▼</a>
                     <ul class="submenu">
-                        <li><a href="paddling.php">Urban Trail Series</a></li>
-                        <li><a href="cycling.php">Nordic Racing</a></li>
-                        <li><a href="running.php">Bike Racing</a></li>
+                        <li><a href="<?php echo esc_url(site_url('/go-spring/')); ?>">Go Spring!</a></li>
+                        <li><a href="#">Bluff Tuff</a></li>
+                        <li><a href="<?php echo esc_url(site_url('/night-light/')); ?>">Night Light</a></li>
+                        <li><a href="<?php echo esc_url(site_url('/turkey-day-trail-trot/')); ?>">Turkey Day Trail Trot</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

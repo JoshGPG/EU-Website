@@ -39,6 +39,99 @@
     </div>
 </section>
 
+<!-- Popular Programs 4x2 Grid -->
+<section class="showcase-grid">
+
+    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #1a5276;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Year-Round Nordic</h3>
+            <p class="showcase-card-desc">Train with experienced coaches from May through winter. Beginner to advanced skiers welcome.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #2D62A5;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Learn to Ski</h3>
+            <p class="showcase-card-desc">New to cross-country skiing? Start here with beginner-friendly lessons and patient coaches.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/juniors/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #4a235a;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Junior Training</h3>
+            <p class="showcase-card-desc">Competitive training for ages 14&ndash;19. State champions and national qualifiers.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/youth/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #1e8449;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">EU SkiWerx</h3>
+            <p class="showcase-card-desc">Building a love for the outdoors through Nordic skiing for young developmental athletes.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/paddling/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #2c3e50;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Junior Paddling</h3>
+            <p class="showcase-card-desc">Kayak, SUP and canoe throughout the summer at Long Lake. Ages 11&ndash;18.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/paddling/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #B9313A;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Adult Canoe Racing</h3>
+            <p class="showcase-card-desc">Learn competitive canoe racing with pro boats on Long Lake. Adults 18+.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #245089;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Learn to Rollerski</h3>
+            <p class="showcase-card-desc">Get a head start on ski season with spring rollerski technique lessons.</p>
+            <span class="showcase-card-btn">Learn More</span>
+        </div>
+    </a>
+
+    <a href="<?php echo esc_url(site_url('/calendar/')); ?>" class="showcase-card">
+        <span class="showcase-bracket showcase-bracket--tl"></span>
+        <span class="showcase-bracket showcase-bracket--br"></span>
+        <div class="showcase-card-img" style="background-color: #333;"></div>
+        <div class="showcase-card-body">
+            <h3 class="showcase-card-title">Race Calendar</h3>
+            <p class="showcase-card-desc">View upcoming races, training camps, and community events all season long.</p>
+            <span class="showcase-card-btn">View Calendar</span>
+        </div>
+    </a>
+
+</section>
+
 <!-- Two Column Boxes -->
 <section class="two-col-boxes">
     <div class="col-box col-box-left">

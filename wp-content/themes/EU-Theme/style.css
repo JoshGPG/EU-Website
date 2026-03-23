@@ -15,7 +15,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: #f5f0eb;
+    background: #f9f9f9;
 }
 
 a {
@@ -67,7 +67,7 @@ a:hover {
 }
 
 /* Navigation */
-.main-nav > ul {
+.main-nav>ul {
     list-style: none;
     display: flex;
     gap: 0;
@@ -99,7 +99,7 @@ a:hover {
 /* Dropdown Sub-menus */
 .main-nav .submenu {
     display: none;
-    position: absolute;
+    position: absothelute;
     top: 100%;
     left: 0;
     list-style: none;
@@ -110,7 +110,7 @@ a:hover {
     z-index: 1000;
 }
 
-.main-nav .dropdown:hover > .submenu {
+.main-nav .dropdown:hover>.submenu {
     display: flex;
 }
 
@@ -222,10 +222,7 @@ a:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1140px;
-    margin: 0 auto;
+    height: calc(100vh - 160px);
 }
 
 .feature-box {
@@ -238,8 +235,6 @@ a:hover {
     position: relative;
     overflow: hidden;
     transition: opacity 0.2s;
-    border-radius: 6px;
-    min-height: 280px;
 }
 
 .feature-box:hover {
@@ -286,202 +281,6 @@ a:hover {
 
 .feature-box:hover .feature-cta {
     border-bottom-color: #fff;
-}
-
-/* Testimonials Slider */
-.testimonials {
-    background: #1E4D80;
-    padding: 50px 20px 40px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.testimonials-inner {
-    position: relative;
-    max-width: 700px;
-    margin: 0 auto;
-    min-height: 120px;
-}
-
-.testimonial-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-}
-
-.testimonial-slide.active {
-    opacity: 1;
-    position: relative;
-}
-
-.testimonial-quote {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    color: #fff;
-    font-style: italic;
-    margin-bottom: 15px;
-}
-
-.testimonial-author {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.6);
-    text-transform: uppercase;
-}
-
-.testimonial-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 25px;
-}
-
-.testimonial-dots .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.testimonial-dots .dot.active {
-    background: #fff;
-}
-
-/* Showcase 4x2 Program Grid */
-.showcase-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 28px;
-    padding: 40px 20px;
-    max-width: 1180px;
-    margin: 0 auto;
-}
-
-/* Card wrapper with bracket accents */
-.showcase-card {
-    position: relative;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    transition: transform 0.25s, box-shadow 0.25s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.showcase-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
-    text-decoration: none;
-}
-
-/* Corner bracket accents */
-.showcase-bracket {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.showcase-bracket--tl {
-    top: -6px;
-    left: -6px;
-    border-top: 2px solid #2D62A5;
-    border-left: 2px solid #2D62A5;
-}
-
-.showcase-bracket--br {
-    bottom: -6px;
-    right: -6px;
-    border-bottom: 2px solid #2D62A5;
-    border-right: 2px solid #2D62A5;
-}
-
-.showcase-card:hover .showcase-bracket--tl,
-.showcase-card:hover .showcase-bracket--br {
-    border-color: #B9313A;
-}
-
-/* Image block */
-.showcase-card-img {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Content wrapper */
-.showcase-card-body {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    flex: 1;
-}
-
-/* Title */
-.showcase-card-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 10px;
-    line-height: 1.3;
-}
-
-/* Description — grows to push button down */
-.showcase-card-desc {
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.6;
-    flex: 1;
-    margin-bottom: 16px;
-}
-
-/* Hollow button */
-.showcase-card-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 10px 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: #2D62A5;
-    border: 2px solid #2D62A5;
-    background: transparent;
-    transition: background 0.2s, color 0.2s;
-}
-
-.showcase-card:hover .showcase-card-btn {
-    background: #2D62A5;
-    color: #fff;
-}
-
-@media (max-width: 900px) {
-    .showcase-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 22px;
-    }
-}
-
-@media (max-width: 500px) {
-    .showcase-grid {
-        grid-template-columns: 1fr;
-        max-width: 320px;
-    }
 }
 
 /* Two Column Boxes */
@@ -695,39 +494,6 @@ a:hover {
 /* =====================
    Calendar Page
    ===================== */
-
-/* Filter Buttons */
-.cal-filters {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-.cal-filter-btn {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 8px 20px;
-    border-radius: 30px;
-    border: 2px solid #ddd;
-    background: #fff;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.cal-filter-btn:hover {
-    border-color: #2D62A5;
-    color: #2D62A5;
-}
-
-.cal-filter-btn.active {
-    background: #2D62A5;
-    border-color: #2D62A5;
-    color: #fff;
-}
-
 .eu-calendar-wrap {
     background: #fff;
     border-radius: 4px;
@@ -780,8 +546,6 @@ a:hover {
     font-size: 0.95rem;
     border-radius: 4px;
     color: #333;
-    position: relative;
-    flex-direction: column;
 }
 
 .cal-day.cal-empty {
@@ -795,142 +559,25 @@ a:hover {
 }
 
 .cal-day.has-events {
-    background: #f0f0f0;
-    color: #333;
+    background: #B9313A;
+    color: #fff;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s;
-    border: 2px solid #ddd;
 }
 
 .cal-day.has-events:hover {
-    background: #e8e8e8;
-    border-color: #2D62A5;
+    background: #c9414a;
 }
 
 .cal-day.has-events.is-today {
-    background: #2D62A5;
-    color: #fff;
-    border-color: #2D62A5;
+    background: #B9313A;
+    box-shadow: inset 0 0 0 2px #2D62A5;
 }
 
 .cal-day.is-selected {
     outline: 3px solid #2D62A5;
     outline-offset: -3px;
-}
-
-/* Event count badge */
-.cal-day-count {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background: #B9313A;
-    color: #fff;
-    font-size: 0.6rem;
-    font-weight: 700;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-/* Type dots under the day number */
-.cal-day-dots {
-    display: flex;
-    gap: 3px;
-    position: absolute;
-    bottom: 3px;
-}
-
-.cal-type-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    display: block;
-}
-
-/* Hover Tooltip */
-.cal-tooltip {
-    display: none;
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    padding: 12px;
-    min-width: 220px;
-    max-width: 280px;
-    z-index: 100;
-    text-align: left;
-}
-
-.cal-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: #fff;
-}
-
-.cal-tooltip::before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 7px solid transparent;
-    border-top-color: #ddd;
-}
-
-.cal-day.has-events:hover .cal-tooltip {
-    display: block;
-}
-
-.cal-tooltip-item {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-.cal-tooltip-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-.cal-tooltip-badge {
-    display: inline-block;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: #fff;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-bottom: 4px;
-}
-
-.cal-tooltip-title {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #333;
-    line-height: 1.3;
-}
-
-.cal-tooltip-time {
-    display: block;
-    font-size: 0.75rem;
-    color: #888;
-    margin-top: 2px;
 }
 
 /* Day Events Panel */
@@ -962,18 +609,6 @@ a:hover {
 
 .cal-event-card:last-child {
     margin-bottom: 0;
-}
-
-.cal-event-type-badge {
-    display: inline-block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: #fff;
-    padding: 3px 8px;
-    border-radius: 3px;
-    margin-bottom: 8px;
 }
 
 .cal-event-card h4 {
@@ -1283,13 +918,6 @@ a:hover {
     margin-top: 10px !important;
 }
 
-.juniors-subscribe-note {
-    font-size: 0.95rem;
-    color: #2D62A5;
-    font-weight: 600;
-    margin-bottom: 30px;
-}
-
 .nordic-section-title {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.3rem;
@@ -1309,281 +937,59 @@ a:hover {
     margin-bottom: 15px;
 }
 
-/* Widen container on program pages */
-.page-template-page-adult-nordic .container,
-.page-template-page-juniors .container,
-.page-template-page-youth .container,
-.page-template-page-paddling .container {
-    max-width: 1140px;
-}
-
-/* Program Box Grid (admin-managed) */
-.program-box-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
-    margin-bottom: 25px;
-}
-
-.program-box {
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 25px;
-    text-decoration: none;
+.nordic-programs-list {
     display: flex;
     flex-direction: column;
-    border-top: 4px solid #2D62A5;
-    min-height: 180px;
-    transition: box-shadow 0.2s, transform 0.2s;
-}
-
-a.program-box:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
-    transform: translateY(-2px);
-    text-decoration: none;
-}
-
-.program-box-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #2D62A5;
+    gap: 10px;
     margin-bottom: 10px;
-    line-height: 1.3;
 }
 
-.program-box-desc {
-    font-size: 0.88rem;
-    color: #555;
-    line-height: 1.6;
-    flex: 1;
-}
-
-.program-box-desc p {
-    margin: 0 0 8px;
-}
-
-.program-box-desc p:last-child {
-    margin-bottom: 0;
-}
-
-.program-box-cta {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #B9313A;
-    margin-top: 12px;
-    letter-spacing: 0.5px;
-}
-
-a.program-box:hover .program-box-cta {
-    color: #2D62A5;
-}
-
-/* Closed programs */
-.program-box-grid--closed .program-box {
-    border-top-color: #ccc;
-    opacity: 0.7;
-}
-
-.program-box-grid--closed .program-box:hover {
-    opacity: 1;
-}
-
-.program-box-grid--closed .program-box-title {
-    color: #888;
-}
-
-.program-box-empty {
-    font-size: 0.9rem;
-    color: #888;
-    font-style: italic;
-    margin-bottom: 20px;
-}
-
-/* Responsive: Program Boxes */
-@media (max-width: 900px) {
-    .program-box-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .program-box-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* =====================
-   Paddling Page
-   ===================== */
-.paddle-program {
+.nordic-program-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: #fff;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 25px 30px;
-    margin-bottom: 20px;
+    padding: 18px 25px;
+    text-decoration: none;
+    transition: box-shadow 0.2s, border-left 0.2s;
     border-left: 4px solid #2D62A5;
 }
 
-.paddle-program-highlight {
-    border-left-color: #B9313A;
-    background: #fdf6f6;
+.nordic-program-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    text-decoration: none;
 }
 
-.paddle-program-title {
+.nordic-program-name {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #2D62A5;
-    margin-bottom: 8px;
-}
-
-.paddle-program-subtitle {
-    font-size: 0.9rem;
-    color: #B9313A;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 0;
-}
-
-.paddle-program-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 20px;
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 15px;
-}
-
-.paddle-program-meta span {
-    white-space: nowrap;
-}
-
-.paddle-program-details p {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #444;
-    margin-bottom: 12px;
-}
-
-.paddle-program-details ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 12px 0;
-}
-
-.paddle-program-details ul li {
-    font-size: 0.95rem;
-    color: #444;
-    line-height: 1.7;
-    padding-left: 18px;
-    position: relative;
-}
-
-.paddle-program-details ul li::before {
-    content: "\2022";
-    color: #2D62A5;
-    font-weight: 700;
-    position: absolute;
-    left: 0;
-}
-
-.paddle-prereq {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    border-radius: 4px;
-    padding: 10px 15px;
-    font-size: 0.9rem !important;
-    font-weight: 600;
-    color: #856404 !important;
-}
-
-.paddle-price {
-    font-size: 0.95rem;
-    color: #2D62A5 !important;
-}
-
-.paddle-cap {
-    font-size: 0.85rem !important;
-    color: #888 !important;
-    font-style: italic;
-}
-
-.paddle-program-detail {
-    background: #fff;
-    border-radius: 6px;
-    padding: 20px 25px;
-    margin-bottom: 20px;
-    border: 1px solid #e0e0e0;
-}
-
-.paddle-program-detail p {
-    margin-bottom: 10px;
-    line-height: 1.7;
-}
-
-.paddle-program-detail ul {
-    margin: 0 0 12px 20px;
-    line-height: 1.7;
-}
-
-.paddle-program-detail ul li {
-    margin-bottom: 4px;
-}
-
-.paddle-event-highlight {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: #2D62A5;
-}
-
-.paddle-price {
-    font-weight: 700;
-    color: #1e8449;
-}
-
-.paddle-subprogram-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
     color: #333;
-    margin-top: 25px;
-    margin-bottom: 10px;
 }
 
-.paddle-donate {
-    background: #2D62A5;
-    color: #fff;
-    border-radius: 6px;
-    padding: 30px;
-    text-align: center;
-    margin-top: 40px;
-}
-
-.paddle-donate h3 {
-    font-family: 'Montserrat', sans-serif;
+.nordic-program-arrow {
     font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #fff;
+    color: #2D62A5;
+    transition: transform 0.2s;
 }
 
-.paddle-donate p {
-    font-size: 0.95rem;
-    opacity: 0.85;
-    margin: 0;
+.nordic-program-item:hover .nordic-program-arrow {
+    transform: translateX(4px);
 }
 
-/* Cycling Page */
-.cycling-program-name {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 8px;
-    margin-top: 10px;
+.nordic-programs-list.closed .nordic-program-item {
+    border-left-color: #ccc;
+    opacity: 0.7;
+}
+
+.nordic-programs-list.closed .nordic-program-item:hover {
+    opacity: 1;
+}
+
+.nordic-programs-list.closed .nordic-program-arrow {
+    color: #888;
 }
 
 /* =====================
@@ -1717,16 +1123,11 @@ a.program-box:hover .program-box-cta {
 /* =====================
    News Page
    ===================== */
-.news-section {
-    background: #f5f0eb;
-    padding: 60px 0;
-}
-
 .news-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .news-filter-tab {
@@ -1757,8 +1158,8 @@ a.program-box:hover .program-box-cta {
 .news-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px 35px;
-    margin-bottom: 50px;
+    gap: 25px;
+    margin-bottom: 40px;
 }
 
 .news-card {
@@ -1900,40 +1301,6 @@ a.program-box:hover .program-box-cta {
     font-size: 1.1rem;
 }
 
-/* Race Fee Table */
-.race-fee-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-}
-
-.race-fee-table th,
-.race-fee-table td {
-    text-align: left;
-    padding: 10px 16px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.race-fee-table th {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    color: #2D62A5;
-    font-size: 0.9rem;
-}
-
-.race-fee-table td:first-child {
-    color: #444;
-}
-
-.race-fee-table td:not(:first-child) {
-    font-weight: 600;
-    color: #1e8449;
-}
-
-.race-fee-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
 /* Responsive: News */
 @media (max-width: 700px) {
     .news-grid {
@@ -1948,381 +1315,4 @@ a.program-box:hover .program-box-cta {
         font-size: 0.8rem;
         padding: 6px 14px;
     }
-}
-
-/* =====================
-   Photo Gallery
-   ===================== */
-.eu-gallery-section {
-    margin-top: 35px;
-}
-
-.eu-gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 30px;
-}
-
-.eu-gallery-item {
-    display: block;
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.eu-gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
-}
-
-.eu-gallery-item:hover img {
-    transform: scale(1.08);
-}
-
-/* Lightbox Overlay */
-.eu-lightbox {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-}
-
-.eu-lightbox.active {
-    display: flex;
-}
-
-.eu-lightbox-img {
-    max-width: 90%;
-    max-height: 85vh;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.eu-lightbox-close {
-    position: absolute;
-    top: 20px;
-    right: 25px;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 2.5rem;
-    cursor: pointer;
-    line-height: 1;
-    padding: 0;
-    transition: color 0.2s;
-}
-
-.eu-lightbox-close:hover {
-    color: #B9313A;
-}
-
-.eu-lightbox-prev,
-.eu-lightbox-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 3rem;
-    cursor: pointer;
-    padding: 10px;
-    line-height: 1;
-    transition: color 0.2s;
-}
-
-.eu-lightbox-prev { left: 15px; }
-.eu-lightbox-next { right: 15px; }
-
-.eu-lightbox-prev:hover,
-.eu-lightbox-next:hover {
-    color: #2D62A5;
-}
-
-/* Responsive: Gallery */
-@media (max-width: 900px) {
-    .eu-gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .eu-gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .eu-lightbox-prev { left: 5px; font-size: 2rem; }
-    .eu-lightbox-next { right: 5px; font-size: 2rem; }
-}
-
-/* =====================================================
-   URBAN TRAIL SERIES — Gritty Theme Overrides
-   ===================================================== */
-
-/* --- UTS Nav Dropdown (global, all pages) --- */
-.uts-nav > a {
-    font-family: 'Oswald', sans-serif;
-    color: #C8512B !important;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.uts-nav > a:hover {
-    color: #a33d1e !important;
-}
-
-.uts-nav .submenu {
-    background: #1C1C1C;
-    border: 1px solid #333;
-}
-
-.uts-nav .submenu a {
-    color: #F0ECE6;
-    border-bottom-color: #333;
-}
-
-.uts-nav .submenu a:hover {
-    color: #C8512B;
-    background-color: #2A2A2A;
-    text-decoration-color: #C8512B;
-}
-
-/* --- UTS Page-Level Scope (4 body classes) --- */
-.page-template-page-urban-trail-series,
-.page-template-page-go-spring,
-.page-template-page-night-light,
-.page-template-page-turkey-day {
-    background: #1C1C1C;
-}
-
-/* Widen container on UTS pages */
-.page-template-page-urban-trail-series .container,
-.page-template-page-go-spring .container,
-.page-template-page-night-light .container,
-.page-template-page-turkey-day .container {
-    max-width: 1140px;
-}
-
-/* Page title */
-.page-template-page-urban-trail-series .page-title,
-.page-template-page-go-spring .page-title,
-.page-template-page-night-light .page-title,
-.page-template-page-turkey-day .page-title {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #F0ECE6;
-    border-bottom: 4px solid #C8512B;
-    padding-bottom: 12px;
-}
-
-/* Page intro text */
-.page-template-page-urban-trail-series .page-intro,
-.page-template-page-go-spring .page-intro,
-.page-template-page-night-light .page-intro,
-.page-template-page-turkey-day .page-intro {
-    color: #bbb;
-}
-
-/* Section titles */
-.page-template-page-urban-trail-series .nordic-section-title,
-.page-template-page-go-spring .nordic-section-title,
-.page-template-page-night-light .nordic-section-title,
-.page-template-page-turkey-day .nordic-section-title {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #F0ECE6;
-    border-left: 4px solid #C8512B;
-    padding-left: 14px;
-}
-
-/* Intro cards (nordic-intro) */
-.page-template-page-urban-trail-series .nordic-intro,
-.page-template-page-go-spring .nordic-intro,
-.page-template-page-night-light .nordic-intro,
-.page-template-page-turkey-day .nordic-intro {
-    background: #2A2A2A;
-    box-shadow: none;
-    border-left: 4px solid #C8512B;
-}
-
-.page-template-page-urban-trail-series .nordic-intro p,
-.page-template-page-go-spring .nordic-intro p,
-.page-template-page-night-light .nordic-intro p,
-.page-template-page-turkey-day .nordic-intro p {
-    color: #ddd;
-}
-
-/* Detail cards (paddle-program-detail) */
-.page-template-page-urban-trail-series .paddle-program-detail,
-.page-template-page-go-spring .paddle-program-detail,
-.page-template-page-night-light .paddle-program-detail,
-.page-template-page-turkey-day .paddle-program-detail {
-    background: #2A2A2A;
-    border-color: #3A3A3A;
-    border-left: 3px solid #C8512B;
-}
-
-.page-template-page-urban-trail-series .paddle-program-detail p,
-.page-template-page-go-spring .paddle-program-detail p,
-.page-template-page-night-light .paddle-program-detail p,
-.page-template-page-turkey-day .paddle-program-detail p {
-    color: #ddd;
-}
-
-.page-template-page-urban-trail-series .paddle-program-detail ul li,
-.page-template-page-go-spring .paddle-program-detail ul li,
-.page-template-page-night-light .paddle-program-detail ul li,
-.page-template-page-turkey-day .paddle-program-detail ul li {
-    color: #ddd;
-}
-
-/* Race fee table — inverted */
-.page-template-page-urban-trail-series .race-fee-table th,
-.page-template-page-go-spring .race-fee-table th,
-.page-template-page-night-light .race-fee-table th,
-.page-template-page-turkey-day .race-fee-table th {
-    color: #C8512B;
-}
-
-.page-template-page-urban-trail-series .race-fee-table td,
-.page-template-page-go-spring .race-fee-table td,
-.page-template-page-night-light .race-fee-table td,
-.page-template-page-turkey-day .race-fee-table td {
-    color: #ddd;
-    border-bottom-color: #3A3A3A;
-}
-
-.page-template-page-urban-trail-series .race-fee-table td:not(:first-child),
-.page-template-page-go-spring .race-fee-table td:not(:first-child),
-.page-template-page-night-light .race-fee-table td:not(:first-child),
-.page-template-page-turkey-day .race-fee-table td:not(:first-child) {
-    color: #C8512B;
-}
-
-/* Showcase cards on UTS hub */
-.page-template-page-urban-trail-series .showcase-card {
-    background: #2A2A2A;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.page-template-page-urban-trail-series .showcase-card:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.page-template-page-urban-trail-series .showcase-card-title {
-    color: #F0ECE6;
-}
-
-.page-template-page-urban-trail-series .showcase-card-desc {
-    color: #aaa;
-}
-
-.page-template-page-urban-trail-series .showcase-bracket--tl,
-.page-template-page-urban-trail-series .showcase-bracket--br {
-    border-color: #C8512B;
-}
-
-.page-template-page-urban-trail-series .showcase-card:hover .showcase-bracket--tl,
-.page-template-page-urban-trail-series .showcase-card:hover .showcase-bracket--br {
-    border-color: #F0ECE6;
-}
-
-.page-template-page-urban-trail-series .showcase-card-btn {
-    color: #C8512B;
-    border-color: #C8512B;
-}
-
-.page-template-page-urban-trail-series .showcase-card:hover .showcase-card-btn {
-    background: #C8512B;
-    color: #fff;
-}
-
-/* Links → rust on hover */
-.page-template-page-urban-trail-series a,
-.page-template-page-go-spring a,
-.page-template-page-night-light a,
-.page-template-page-turkey-day a {
-    color: #C8512B;
-}
-
-.page-template-page-urban-trail-series a:hover,
-.page-template-page-go-spring a:hover,
-.page-template-page-night-light a:hover,
-.page-template-page-turkey-day a:hover {
-    color: #a33d1e;
-    text-decoration-color: #C8512B;
-}
-
-/* Gallery section — rust accent on hover */
-.page-template-page-urban-trail-series .eu-gallery-item:hover img,
-.page-template-page-go-spring .eu-gallery-item:hover img,
-.page-template-page-night-light .eu-gallery-item:hover img,
-.page-template-page-turkey-day .eu-gallery-item:hover img {
-    outline: 3px solid #C8512B;
-    outline-offset: -3px;
-}
-
-.page-template-page-urban-trail-series .eu-lightbox-prev:hover,
-.page-template-page-urban-trail-series .eu-lightbox-next:hover,
-.page-template-page-go-spring .eu-lightbox-prev:hover,
-.page-template-page-go-spring .eu-lightbox-next:hover,
-.page-template-page-night-light .eu-lightbox-prev:hover,
-.page-template-page-night-light .eu-lightbox-next:hover,
-.page-template-page-turkey-day .eu-lightbox-prev:hover,
-.page-template-page-turkey-day .eu-lightbox-next:hover {
-    color: #C8512B;
-}
-
-.page-template-page-urban-trail-series .eu-lightbox-close:hover,
-.page-template-page-go-spring .eu-lightbox-close:hover,
-.page-template-page-night-light .eu-lightbox-close:hover,
-.page-template-page-turkey-day .eu-lightbox-close:hover {
-    color: #C8512B;
-}
-
-/* Gallery section title inherits gritty style from .nordic-section-title above */
-
-/* Nordic note inside UTS pages */
-.page-template-page-urban-trail-series .nordic-note,
-.page-template-page-go-spring .nordic-note,
-.page-template-page-night-light .nordic-note,
-.page-template-page-turkey-day .nordic-note {
-    border-left-color: #C8512B;
-    color: #999 !important;
-}
-
-/* Program boxes on UTS pages */
-.page-template-page-urban-trail-series .program-box,
-.page-template-page-go-spring .program-box,
-.page-template-page-night-light .program-box,
-.page-template-page-turkey-day .program-box {
-    background: #2A2A2A;
-    border-top-color: #C8512B;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.page-template-page-urban-trail-series .program-box-title,
-.page-template-page-go-spring .program-box-title,
-.page-template-page-night-light .program-box-title,
-.page-template-page-turkey-day .program-box-title {
-    color: #C8512B;
-}
-
-.page-template-page-urban-trail-series .program-box-desc,
-.page-template-page-go-spring .program-box-desc,
-.page-template-page-night-light .program-box-desc,
-.page-template-page-turkey-day .program-box-desc {
-    color: #bbb;
 }

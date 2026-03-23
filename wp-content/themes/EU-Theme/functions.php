@@ -11,6 +11,59 @@ function mytheme_setup() {
 }
 add_action('after_setup_theme', 'mytheme_setup');
 
+// --- Custom Nav Walker (preserves dropdown/submenu CSS classes) ---
+class EU_Nav_Walker extends Walker_Nav_Menu {
+    // Add 'dropdown' class to <li> elements that have children
+    function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+        $classes = empty($item->classes) ? [] : (array) $item->classes;
+        $classes[] = 'menu-item-' . $item->ID;
+
+        // Add 'dropdown' class if this item has children (depth 0 only)
+        if ($args->walker->has_children && $depth === 0) {
+            $classes[] = 'dropdown';
+        }
+
+        // Preserve any custom CSS classes added via WP Menu admin
+        $class_names = implode(' ', array_filter($classes));
+        $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
+
+        $output .= '<li' . $class_names . '>';
+
+        $atts = [];
+        $atts['title']  = !empty($item->attr_title) ? $item->attr_title : '';
+        $atts['target'] = !empty($item->target)     ? $item->target     : '';
+        $atts['rel']    = !empty($item->xfn)        ? $item->xfn        : '';
+        $atts['href']   = !empty($item->url)        ? $item->url        : '';
+
+        $attributes = '';
+        foreach ($atts as $attr => $value) {
+            if (!empty($value)) {
+                $attributes .= ' ' . $attr . '="' . esc_attr($value) . '"';
+            }
+        }
+
+        $title = apply_filters('the_title', $item->title, $item->ID);
+
+        // Append ▼ indicator for top-level items with children
+        if ($args->walker->has_children && $depth === 0) {
+            $title .= ' ▼';
+        }
+
+        $item_output = ($args->before ?? '');
+        $item_output .= '<a' . $attributes . '>';
+        $item_output .= ($args->link_before ?? '') . $title . ($args->link_after ?? '');
+        $item_output .= '</a>';
+        $item_output .= ($args->after ?? '');
+
+        $output .= $item_output;
+    }
+
+    // Output <ul class="submenu"> for sub-menus instead of default class
+    function start_lvl(&$output, $depth = 0, $args = null) {
+        $output .= '<ul class="submenu">';
+    }
+}
+
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
     wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.3');
@@ -146,6 +199,7 @@ function eu_create_program_groups() {
         'Adult Nordic', 'Juniors', 'Youth',
         'Paddling - Junior', 'Paddling - Adult Canoe', 'Paddling - Clinics',
         'Cycling - Adult', 'Cycling - Youth',
+        'Trail Running',
     ];
     foreach ($groups as $name) {
         if (!term_exists($name, 'eu_program_group')) {
@@ -354,257 +408,49 @@ function eu_create_news_categories() {
 }
 add_action('init', 'eu_create_news_categories');
 
-// Auto-create News page
-function eu_create_news_page() {
-    if (get_option('eu_news_page_created')) return;
+// Auto-create all site pages (consolidated)
+// Program pages use template-program.php; other pages keep their specific templates.
+// Each page has its own option flag so it only gets created once.
+function eu_create_site_pages() {
+    $pages = [
+        // Non-program pages (keep their specific templates)
+        ['title' => 'News',                'slug' => 'news',                'template' => 'page-news.php',              'option' => 'eu_news_page_created'],
+        ['title' => 'Nordic',              'slug' => 'nordic',              'template' => 'page-nordic.php',            'option' => 'eu_nordic_page_created'],
+        ['title' => 'Programs',            'slug' => 'programs',            'template' => 'page-programs.php',          'option' => 'eu_programs_page_created'],
+        ['title' => 'Urban Trail Series',  'slug' => 'urban-trail-series',  'template' => 'page-urban-trail-series.php','option' => 'eu_urban_trail_series_page_created'],
+        ['title' => 'Go Spring!',          'slug' => 'go-spring',           'template' => 'page-go-spring.php',         'option' => 'eu_go_spring_page_created'],
+        ['title' => 'Night Light',         'slug' => 'night-light',         'template' => 'page-night-light.php',       'option' => 'eu_night_light_page_created'],
+        ['title' => 'Turkey Day Trail Trot','slug' => 'turkey-day-trail-trot','template' => 'page-turkey-day.php',      'option' => 'eu_turkey_day_page_created'],
 
-    $exists = get_page_by_path('news');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'News',
-            'post_name'   => 'news',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-news.php');
+        // Program pages (use consolidated template)
+        ['title' => 'Adult Nordic',  'slug' => 'adult-nordic',  'template' => 'template-program.php', 'option' => 'eu_adult_nordic_page_created'],
+        ['title' => 'Juniors',       'slug' => 'juniors',       'template' => 'template-program.php', 'option' => 'eu_juniors_page_created'],
+        ['title' => 'Youth',         'slug' => 'youth',         'template' => 'template-program.php', 'option' => 'eu_youth_page_created'],
+        ['title' => 'Paddling',      'slug' => 'paddling',      'template' => 'template-program.php', 'option' => 'eu_paddling_page_created'],
+        ['title' => 'Cycling',       'slug' => 'cycling',       'template' => 'template-program.php', 'option' => 'eu_cycling_page_created'],
+        ['title' => 'Trail Running', 'slug' => 'trail-running', 'template' => 'template-program.php', 'option' => 'eu_trail_running_page_created'],
+    ];
+
+    foreach ($pages as $page) {
+        if (get_option($page['option'])) continue;
+
+        $exists = get_page_by_path($page['slug']);
+        if (!$exists) {
+            $id = wp_insert_post([
+                'post_title'  => $page['title'],
+                'post_name'   => $page['slug'],
+                'post_status' => 'publish',
+                'post_type'   => 'page',
+            ]);
+            if ($id && !is_wp_error($id)) {
+                update_post_meta($id, '_wp_page_template', $page['template']);
+            }
         }
+
+        update_option($page['option'], true);
     }
-
-    update_option('eu_news_page_created', true);
 }
-add_action('init', 'eu_create_news_page');
-
-// Auto-create Juniors page
-function eu_create_juniors_page() {
-    if (get_option('eu_juniors_page_created')) return;
-
-    $exists = get_page_by_path('juniors');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Juniors',
-            'post_name'   => 'juniors',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-juniors.php');
-        }
-    }
-
-    update_option('eu_juniors_page_created', true);
-}
-add_action('init', 'eu_create_juniors_page');
-
-// Auto-create Youth page
-function eu_create_youth_page() {
-    if (get_option('eu_youth_page_created')) return;
-
-    $exists = get_page_by_path('youth');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Youth',
-            'post_name'   => 'youth',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-youth.php');
-        }
-    }
-
-    update_option('eu_youth_page_created', true);
-}
-add_action('init', 'eu_create_youth_page');
-
-// Auto-create Paddling page
-function eu_create_paddling_page() {
-    if (get_option('eu_paddling_page_created')) return;
-
-    $exists = get_page_by_path('paddling');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Paddling',
-            'post_name'   => 'paddling',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-paddling.php');
-        }
-    }
-
-    update_option('eu_paddling_page_created', true);
-}
-add_action('init', 'eu_create_paddling_page');
-
-// Auto-create Cycling page
-function eu_create_cycling_page() {
-    if (get_option('eu_cycling_page_created')) return;
-
-    $exists = get_page_by_path('cycling');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Cycling',
-            'post_name'   => 'cycling',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-cycling.php');
-        }
-    }
-
-    update_option('eu_cycling_page_created', true);
-}
-add_action('init', 'eu_create_cycling_page');
-
-// Auto-create Nordic summary page
-function eu_create_nordic_page() {
-    if (get_option('eu_nordic_page_created')) return;
-
-    $exists = get_page_by_path('nordic');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Nordic',
-            'post_name'   => 'nordic',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-nordic.php');
-        }
-    }
-
-    update_option('eu_nordic_page_created', true);
-}
-add_action('init', 'eu_create_nordic_page');
-
-// Auto-create Programs summary page
-function eu_create_programs_page() {
-    if (get_option('eu_programs_page_created')) return;
-
-    $exists = get_page_by_path('programs');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Programs',
-            'post_name'   => 'programs',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-programs.php');
-        }
-    }
-
-    update_option('eu_programs_page_created', true);
-}
-add_action('init', 'eu_create_programs_page');
-
-// Auto-create Trail Running page
-function eu_create_trail_running_page() {
-    if (get_option('eu_trail_running_page_created')) return;
-
-    $exists = get_page_by_path('trail-running');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Trail Running',
-            'post_name'   => 'trail-running',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-trail-running.php');
-        }
-    }
-
-    update_option('eu_trail_running_page_created', true);
-}
-add_action('init', 'eu_create_trail_running_page');
-
-// Auto-create Urban Trail Series page
-function eu_create_urban_trail_series_page() {
-    if (get_option('eu_urban_trail_series_page_created')) return;
-
-    $exists = get_page_by_path('urban-trail-series');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Urban Trail Series',
-            'post_name'   => 'urban-trail-series',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-urban-trail-series.php');
-        }
-    }
-
-    update_option('eu_urban_trail_series_page_created', true);
-}
-add_action('init', 'eu_create_urban_trail_series_page');
-
-// Auto-create Go Spring! page
-function eu_create_go_spring_page() {
-    if (get_option('eu_go_spring_page_created')) return;
-
-    $exists = get_page_by_path('go-spring');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Go Spring!',
-            'post_name'   => 'go-spring',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-go-spring.php');
-        }
-    }
-
-    update_option('eu_go_spring_page_created', true);
-}
-add_action('init', 'eu_create_go_spring_page');
-
-// Auto-create Night Light page
-function eu_create_night_light_page() {
-    if (get_option('eu_night_light_page_created')) return;
-
-    $exists = get_page_by_path('night-light');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Night Light',
-            'post_name'   => 'night-light',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-night-light.php');
-        }
-    }
-
-    update_option('eu_night_light_page_created', true);
-}
-add_action('init', 'eu_create_night_light_page');
-
-// Auto-create Turkey Day Trail Trot page
-function eu_create_turkey_day_page() {
-    if (get_option('eu_turkey_day_page_created')) return;
-
-    $exists = get_page_by_path('turkey-day-trail-trot');
-    if (!$exists) {
-        $id = wp_insert_post([
-            'post_title'  => 'Turkey Day Trail Trot',
-            'post_name'   => 'turkey-day-trail-trot',
-            'post_status' => 'publish',
-            'post_type'   => 'page',
-        ]);
-        if ($id && !is_wp_error($id)) {
-            update_post_meta($id, '_wp_page_template', 'page-turkey-day.php');
-        }
-    }
-
-    update_option('eu_turkey_day_page_created', true);
-}
-add_action('init', 'eu_create_turkey_day_page');
+add_action('init', 'eu_create_site_pages');
 
 // --- Photo Gallery Helper ---
 function eu_render_photo_gallery($title = 'Photo Gallery') {
@@ -695,3 +541,271 @@ function eu_render_photo_gallery($title = 'Photo Gallery') {
     <?php
     echo '</section>';
 }
+
+// =============================================================================
+// ACF Options Page + Field Group Registrations
+// =============================================================================
+
+// Register ACF Options Page: "Site Settings"
+function eu_register_acf_options_page() {
+    if (!function_exists('acf_add_options_page')) return;
+
+    acf_add_options_page([
+        'page_title' => 'Site Settings',
+        'menu_title' => 'Site Settings',
+        'menu_slug'  => 'site-settings',
+        'capability' => 'edit_posts',
+        'redirect'   => false,
+        'icon_url'   => 'dashicons-admin-settings',
+        'position'   => 2,
+    ]);
+}
+add_action('acf/init', 'eu_register_acf_options_page');
+
+// Register ACF Field Groups via PHP
+function eu_register_acf_field_groups() {
+    if (!function_exists('acf_add_local_field_group')) return;
+
+    // --- Site Settings Field Group ---
+    acf_add_local_field_group([
+        'key'      => 'group_site_settings',
+        'title'    => 'Site Settings',
+        'fields'   => [
+            // Branding
+            [
+                'key'   => 'field_site_slogan',
+                'label' => 'Site Slogan',
+                'name'  => 'site_slogan',
+                'type'  => 'text',
+                'default_value' => 'ACTIVE. HEALTHY. OUTDOORS.',
+                'instructions'  => 'Displayed in the ribbon above the header.',
+            ],
+            // Contact Info
+            [
+                'key'   => 'field_office_email',
+                'label' => 'Office Email',
+                'name'  => 'office_email',
+                'type'  => 'email',
+                'default_value' => 'info@enduranceunited.org',
+            ],
+            [
+                'key'   => 'field_office_phone',
+                'label' => 'Office Phone',
+                'name'  => 'office_phone',
+                'type'  => 'text',
+                'default_value' => '(612) 850-3937',
+            ],
+            [
+                'key'   => 'field_office_address',
+                'label' => 'Office Address',
+                'name'  => 'office_address',
+                'type'  => 'textarea',
+                'rows'  => 3,
+                'default_value' => "713 Minnehaha Ave. East, Suite 216\nSaint Paul, MN 55106, USA",
+            ],
+            // Social URLs
+            [
+                'key'   => 'field_facebook_url',
+                'label' => 'Facebook URL',
+                'name'  => 'facebook_url',
+                'type'  => 'url',
+                'default_value' => 'https://www.facebook.com/EnduranceUntd/',
+            ],
+            [
+                'key'   => 'field_instagram_url',
+                'label' => 'Instagram URL',
+                'name'  => 'instagram_url',
+                'type'  => 'url',
+                'default_value' => 'https://www.instagram.com/enduranceunited/',
+            ],
+            [
+                'key'   => 'field_youtube_url',
+                'label' => 'YouTube URL',
+                'name'  => 'youtube_url',
+                'type'  => 'url',
+                'default_value' => 'https://www.youtube.com/channel/UCsrv65x0Vzscsh3vRJk_PUA',
+            ],
+            // Footer Content
+            [
+                'key'   => 'field_footer_about_text',
+                'label' => 'Footer About Text',
+                'name'  => 'footer_about_text',
+                'type'  => 'textarea',
+                'rows'  => 4,
+                'default_value' => 'Empowering communities through education, athletics, and mentorship. We are committed to developing young leaders on and off the field.',
+                'instructions'  => 'The "About Us" paragraph in the footer.',
+            ],
+            // Footer - Get Involved Links (Repeater)
+            [
+                'key'          => 'field_footer_get_involved_links',
+                'label'        => 'Footer Get Involved Links',
+                'name'         => 'footer_get_involved_links',
+                'type'         => 'repeater',
+                'layout'       => 'table',
+                'button_label' => 'Add Link',
+                'sub_fields'   => [
+                    [
+                        'key'   => 'field_get_involved_label',
+                        'label' => 'Label',
+                        'name'  => 'label',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'key'   => 'field_get_involved_url',
+                        'label' => 'URL',
+                        'name'  => 'url',
+                        'type'  => 'url',
+                    ],
+                ],
+            ],
+            // Footer - Our Team Links (Repeater)
+            [
+                'key'          => 'field_footer_our_team_links',
+                'label'        => 'Footer Our Team Links',
+                'name'         => 'footer_our_team_links',
+                'type'         => 'repeater',
+                'layout'       => 'table',
+                'button_label' => 'Add Link',
+                'sub_fields'   => [
+                    [
+                        'key'   => 'field_our_team_label',
+                        'label' => 'Label',
+                        'name'  => 'label',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'key'   => 'field_our_team_url',
+                        'label' => 'URL',
+                        'name'  => 'url',
+                        'type'  => 'url',
+                    ],
+                ],
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param'    => 'options_page',
+                    'operator' => '==',
+                    'value'    => 'site-settings',
+                ],
+            ],
+        ],
+        'menu_order' => 0,
+    ]);
+
+    // --- Program Page Fields Field Group ---
+    acf_add_local_field_group([
+        'key'      => 'group_program_page_fields',
+        'title'    => 'Program Page Fields',
+        'fields'   => [
+            [
+                'key'   => 'field_program_subtitle',
+                'label' => 'Subtitle',
+                'name'  => 'program_subtitle',
+                'type'  => 'text',
+                'instructions' => 'Optional subtitle displayed below the page title (e.g. "MyXC affiliated program").',
+            ],
+            [
+                'key'   => 'field_program_intro',
+                'label' => 'Introduction',
+                'name'  => 'program_intro',
+                'type'  => 'wysiwyg',
+                'tabs'  => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 1,
+                'instructions' => 'The introductory description paragraphs for this program.',
+            ],
+            [
+                'key'          => 'field_special_notes',
+                'label'        => 'Special Notes',
+                'name'         => 'special_notes',
+                'type'         => 'repeater',
+                'layout'       => 'block',
+                'button_label' => 'Add Note',
+                'instructions' => 'Optional notes like "ski pass required" or age restrictions.',
+                'sub_fields'   => [
+                    [
+                        'key'   => 'field_note_text',
+                        'label' => 'Note',
+                        'name'  => 'note_text',
+                        'type'  => 'wysiwyg',
+                        'tabs'  => 'all',
+                        'toolbar' => 'basic',
+                        'media_upload' => 0,
+                    ],
+                ],
+            ],
+            [
+                'key'          => 'field_program_sections',
+                'label'        => 'Program Sections',
+                'name'         => 'program_sections',
+                'type'         => 'repeater',
+                'layout'       => 'block',
+                'button_label' => 'Add Section',
+                'instructions' => 'Each section represents a program group (e.g. "Junior Paddling", "Adult Canoe Racing").',
+                'sub_fields'   => [
+                    [
+                        'key'   => 'field_section_title',
+                        'label' => 'Section Title',
+                        'name'  => 'section_title',
+                        'type'  => 'text',
+                    ],
+                    [
+                        'key'   => 'field_section_description',
+                        'label' => 'Section Description',
+                        'name'  => 'section_description',
+                        'type'  => 'wysiwyg',
+                        'tabs'  => 'all',
+                        'toolbar' => 'full',
+                        'media_upload' => 1,
+                        'instructions' => 'Detailed content for this section. Leave blank to show only program boxes.',
+                    ],
+                    [
+                        'key'   => 'field_program_group_slug',
+                        'label' => 'Program Group Slug',
+                        'name'  => 'program_group_slug',
+                        'type'  => 'text',
+                        'instructions' => 'The slug of the Program Group taxonomy term to pull program boxes from (e.g. "adult-nordic", "paddling-junior").',
+                    ],
+                ],
+            ],
+            [
+                'key'           => 'field_show_closed_section',
+                'label'         => 'Show Closed Section',
+                'name'          => 'show_closed_section',
+                'type'          => 'true_false',
+                'default_value' => 1,
+                'ui'            => 1,
+                'instructions'  => 'Show the "Closed for the Season" section at the bottom.',
+            ],
+            [
+                'key'           => 'field_closed_section_message',
+                'label'         => 'Closed Section Message',
+                'name'          => 'closed_section_message',
+                'type'          => 'text',
+                'default_value' => 'Programs listed below are closed for the season. For late sign-ups please reach out.',
+                'conditional_logic' => [
+                    [
+                        [
+                            'field'    => 'field_show_closed_section',
+                            'operator' => '==',
+                            'value'    => '1',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param'    => 'page_template',
+                    'operator' => '==',
+                    'value'    => 'template-program.php',
+                ],
+            ],
+        ],
+        'menu_order' => 0,
+    ]);
+}
+add_action('acf/init', 'eu_register_acf_field_groups');

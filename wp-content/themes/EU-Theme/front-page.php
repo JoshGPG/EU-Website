@@ -93,73 +93,92 @@ endif; ?>
 
 <!-- Two Column Boxes -->
 <section class="two-col-boxes">
-    <div class="col-box col-box-left">
-        <h2>Latest News</h2>
-        <p>Stay up to date with the latest program announcements, race results, and community highlights from EnduranceUnited.</p>
-        <a href="<?php echo esc_url(site_url('/news/')); ?>" class="box-link">Read More &rarr;</a>
-    </div>
-    <div class="col-box col-box-right">
-        <h2>Upcoming Events</h2>
-        <p>Check out our calendar of races, training camps, and community gatherings happening throughout the season.</p>
-        <a href="<?php echo esc_url(site_url('/calendar/')); ?>" class="box-link">View Events &rarr;</a>
-    </div>
+    <?php
+    $twocol_defaults = [
+        1 => ['title' => 'Latest News', 'text' => 'Stay up to date with the latest program announcements, race results, and community highlights from EnduranceUnited.', 'link_label' => 'Read More', 'link_url' => site_url('/news/'), 'color' => '#2D62A5'],
+        2 => ['title' => 'Upcoming Events', 'text' => 'Check out our calendar of races, training camps, and community gatherings happening throughout the season.', 'link_label' => 'View Events', 'link_url' => site_url('/events/'), 'color' => '#245089'],
+    ];
+    for ($i = 1; $i <= 2; $i++) :
+        $d     = $twocol_defaults[$i];
+        $title = get_field('twocol_title_' . $i) ?: $d['title'];
+        $text  = get_field('twocol_text_' . $i) ?: $d['text'];
+        $label = get_field('twocol_link_label_' . $i) ?: $d['link_label'];
+        $url   = get_field('twocol_link_url_' . $i) ?: $d['link_url'];
+        $color = get_field('twocol_color_' . $i) ?: $d['color'];
+    ?>
+        <div class="col-box" style="background-color: <?php echo esc_attr($color); ?>;">
+            <h2><?php echo esc_html($title); ?></h2>
+            <p><?php echo esc_html($text); ?></p>
+            <a href="<?php echo esc_url($url); ?>" class="box-link"><?php echo esc_html($label); ?> &rarr;</a>
+        </div>
+    <?php endfor; ?>
 </section>
 
 <!-- 2x2 Feature Grid -->
 <section class="feature-grid">
-    <a href="<?php echo esc_url(site_url('/calendar/')); ?>" class="feature-box feature-race" style="background-color: #2D62A5;">
-        <span class="feature-label">Upcoming Race</span>
-        <h2>City of Lakes Loppet</h2>
-        <p>Check the calendar for the next race and get registered before spots fill up.</p>
-        <span class="feature-cta">View Calendar &rarr;</span>
-    </a>
-    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="feature-box feature-program" style="background-color: #B9313A;">
-        <span class="feature-label">Featured Program</span>
-        <h2>Adult Year-Round Nordic</h2>
-        <p>Train with experienced coaches year-round. Beginner to advanced skiers welcome.</p>
-        <span class="feature-cta">Learn More &rarr;</span>
-    </a>
-    <a href="<?php echo esc_url(site_url('/news/')); ?>" class="feature-box feature-blog" style="background-color: #333;">
-        <span class="feature-label">From the Blog</span>
-        <h2>Season Recap &amp; What&rsquo;s Ahead</h2>
-        <p>A look back at an incredible season and a preview of what&rsquo;s coming next.</p>
-        <span class="feature-cta">Read Post &rarr;</span>
-    </a>
-    <a href="#" class="feature-box feature-donate" style="background-color: #245089;">
-        <span class="feature-label">Support EU</span>
-        <h2>Make a Donation</h2>
-        <p>Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.</p>
-        <span class="feature-cta">Donate Now &rarr;</span>
-    </a>
+    <?php
+    $feat_defaults = [
+        1 => ['label' => 'Upcoming Race',   'title' => 'City of Lakes Loppet',          'text' => 'Check the calendar for the next race and get registered before spots fill up.', 'cta' => 'View Calendar', 'url' => site_url('/events/'), 'color' => '#2D62A5'],
+        2 => ['label' => 'Featured Program', 'title' => 'Adult Year-Round Nordic',       'text' => 'Train with experienced coaches year-round. Beginner to advanced skiers welcome.', 'cta' => 'Learn More', 'url' => site_url('/adult-nordic/'), 'color' => '#B9313A'],
+        3 => ['label' => 'From the Blog',    'title' => 'Season Recap & What\'s Ahead',  'text' => 'A look back at an incredible season and a preview of what\'s coming next.', 'cta' => 'Read Post', 'url' => site_url('/news/'), 'color' => '#333333'],
+        4 => ['label' => 'Support EU',       'title' => 'Make a Donation',               'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'url' => '#', 'color' => '#245089'],
+    ];
+    for ($i = 1; $i <= 4; $i++) :
+        $d     = $feat_defaults[$i];
+        $label = get_field('feat_label_' . $i) ?: $d['label'];
+        if (!$label) continue;
+        $title = get_field('feat_title_' . $i) ?: $d['title'];
+        $text  = get_field('feat_text_' . $i) ?: $d['text'];
+        $cta   = get_field('feat_cta_' . $i) ?: $d['cta'];
+        $url   = get_field('feat_url_' . $i) ?: $d['url'];
+        $color = get_field('feat_color_' . $i) ?: $d['color'];
+    ?>
+        <a href="<?php echo esc_url($url); ?>" class="feature-box" style="background-color: <?php echo esc_attr($color); ?>;">
+            <span class="feature-label"><?php echo esc_html($label); ?></span>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p><?php echo esc_html($text); ?></p>
+            <span class="feature-cta"><?php echo esc_html($cta); ?> &rarr;</span>
+        </a>
+    <?php endfor; ?>
 </section>
 
 <!-- Testimonials Slider -->
+<?php
+$test_defaults = [
+    1 => ['quote' => 'EU completely changed how I approach training. The coaches are world-class and the community keeps you coming back.', 'author' => 'Sarah M., Adult Nordic Program'],
+    2 => ['quote' => 'My kids have grown so much through the youth program. They\'ve learned discipline, teamwork, and a love for the outdoors.', 'author' => 'Mike T., Youth Program Parent'],
+    3 => ['quote' => 'The race events are incredibly well organized. From registration to finish line, everything is top-notch.', 'author' => 'Jenna L., Race Participant'],
+    4 => ['quote' => 'I joined as a complete beginner and within a season I was racing competitively. Can\'t recommend EU enough.', 'author' => 'David R., Adult Nordic Program'],
+];
+$testimonials = [];
+for ($i = 1; $i <= 6; $i++) {
+    $d     = isset($test_defaults[$i]) ? $test_defaults[$i] : ['quote' => '', 'author' => ''];
+    $quote = get_field('test_quote_' . $i) ?: $d['quote'];
+    if (!$quote) continue;
+    $testimonials[] = [
+        'quote'  => $quote,
+        'author' => get_field('test_author_' . $i) ?: $d['author'],
+    ];
+}
+if (!empty($testimonials)) : ?>
 <section class="testimonials">
     <div class="testimonials-inner">
-        <div class="testimonial-slide active">
-            <p class="testimonial-quote">&ldquo;EU completely changed how I approach training. The coaches are world-class and the community keeps you coming back.&rdquo;</p>
-            <span class="testimonial-author">&mdash; Sarah M., Adult Nordic Program</span>
-        </div>
-        <div class="testimonial-slide">
-            <p class="testimonial-quote">&ldquo;My kids have grown so much through the youth program. They&rsquo;ve learned discipline, teamwork, and a love for the outdoors.&rdquo;</p>
-            <span class="testimonial-author">&mdash; Mike T., Youth Program Parent</span>
-        </div>
-        <div class="testimonial-slide">
-            <p class="testimonial-quote">&ldquo;The race events are incredibly well organized. From registration to finish line, everything is top-notch.&rdquo;</p>
-            <span class="testimonial-author">&mdash; Jenna L., Race Participant</span>
-        </div>
-        <div class="testimonial-slide">
-            <p class="testimonial-quote">&ldquo;I joined as a complete beginner and within a season I was racing competitively. Can&rsquo;t recommend EU enough.&rdquo;</p>
-            <span class="testimonial-author">&mdash; David R., Adult Nordic Program</span>
-        </div>
+        <?php foreach ($testimonials as $idx => $t) : ?>
+            <div class="testimonial-slide<?php echo ($idx === 0) ? ' active' : ''; ?>">
+                <p class="testimonial-quote">&ldquo;<?php echo esc_html($t['quote']); ?>&rdquo;</p>
+                <span class="testimonial-author">&mdash; <?php echo esc_html($t['author']); ?></span>
+            </div>
+        <?php endforeach; ?>
     </div>
-    <div class="testimonial-dots">
-        <span class="dot active" data-tslide="0"></span>
-        <span class="dot" data-tslide="1"></span>
-        <span class="dot" data-tslide="2"></span>
-        <span class="dot" data-tslide="3"></span>
-    </div>
+    <?php if (count($testimonials) > 1) : ?>
+        <div class="testimonial-dots">
+            <?php for ($i = 0; $i < count($testimonials); $i++) : ?>
+                <span class="dot<?php echo ($i === 0) ? ' active' : ''; ?>" data-tslide="<?php echo $i; ?>"></span>
+            <?php endfor; ?>
+        </div>
+    <?php endif; ?>
 </section>
+<?php endif; ?>
 
 <script>
 (function() {

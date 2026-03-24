@@ -775,6 +775,206 @@ function eu_register_acf_field_groups() {
         'menu_order' => 0,
     ]);
 
+    // --- Two Column Boxes Field Group (Front Page) ---
+    // 2 boxes: each has title, text, link label, link URL, bg color
+    $twocol_fields = [];
+    $twocol_defaults = [
+        1 => ['title' => 'Latest News', 'text' => 'Stay up to date with the latest program announcements, race results, and community highlights from EnduranceUnited.', 'link_label' => 'Read More', 'link_url' => '/news/', 'color' => '#2D62A5'],
+        2 => ['title' => 'Upcoming Events', 'text' => 'Check out our calendar of races, training camps, and community gatherings happening throughout the season.', 'link_label' => 'View Events', 'link_url' => '/events/', 'color' => '#245089'],
+    ];
+
+    for ($i = 1; $i <= 2; $i++) {
+        $d = $twocol_defaults[$i];
+        $twocol_fields[] = [
+            'key'   => 'field_twocol_' . $i . '_tab',
+            'label' => 'Box ' . $i,
+            'type'  => 'tab',
+        ];
+        $twocol_fields[] = [
+            'key'           => 'field_twocol_title_' . $i,
+            'label'         => 'Box ' . $i . ' Title',
+            'name'          => 'twocol_title_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['title'],
+        ];
+        $twocol_fields[] = [
+            'key'           => 'field_twocol_text_' . $i,
+            'label'         => 'Box ' . $i . ' Text',
+            'name'          => 'twocol_text_' . $i,
+            'type'          => 'textarea',
+            'rows'          => 3,
+            'default_value' => $d['text'],
+        ];
+        $twocol_fields[] = [
+            'key'           => 'field_twocol_link_label_' . $i,
+            'label'         => 'Box ' . $i . ' Link Label',
+            'name'          => 'twocol_link_label_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['link_label'],
+        ];
+        $twocol_fields[] = [
+            'key'           => 'field_twocol_link_url_' . $i,
+            'label'         => 'Box ' . $i . ' Link URL',
+            'name'          => 'twocol_link_url_' . $i,
+            'type'          => 'url',
+            'instructions'  => 'Full URL (e.g. https://yoursite.com/news/).',
+        ];
+        $twocol_fields[] = [
+            'key'           => 'field_twocol_color_' . $i,
+            'label'         => 'Box ' . $i . ' Background Color',
+            'name'          => 'twocol_color_' . $i,
+            'type'          => 'color_picker',
+            'default_value' => $d['color'],
+        ];
+    }
+
+    acf_add_local_field_group([
+        'key'      => 'group_twocol_boxes',
+        'title'    => 'Two Column Boxes',
+        'fields'   => $twocol_fields,
+        'location' => [
+            [
+                [
+                    'param'    => 'page_type',
+                    'operator' => '==',
+                    'value'    => 'front_page',
+                ],
+            ],
+        ],
+        'menu_order' => 10,
+    ]);
+
+    // --- Feature Grid Field Group (Front Page) ---
+    // 4 boxes: each has label, title, text, CTA text, link URL, bg color
+    $feat_fields = [];
+    $feat_defaults = [
+        1 => ['label' => 'Upcoming Race',     'title' => 'City of Lakes Loppet',              'text' => 'Check the calendar for the next race and get registered before spots fill up.', 'cta' => 'View Calendar', 'color' => '#2D62A5'],
+        2 => ['label' => 'Featured Program',   'title' => 'Adult Year-Round Nordic',           'text' => 'Train with experienced coaches year-round. Beginner to advanced skiers welcome.', 'cta' => 'Learn More', 'color' => '#B9313A'],
+        3 => ['label' => 'From the Blog',      'title' => 'Season Recap & What\'s Ahead',      'text' => 'A look back at an incredible season and a preview of what\'s coming next.', 'cta' => 'Read Post', 'color' => '#333333'],
+        4 => ['label' => 'Support EU',         'title' => 'Make a Donation',                   'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'color' => '#245089'],
+    ];
+
+    for ($i = 1; $i <= 4; $i++) {
+        $d = $feat_defaults[$i];
+        $feat_fields[] = [
+            'key'   => 'field_feat_' . $i . '_tab',
+            'label' => 'Feature ' . $i,
+            'type'  => 'tab',
+        ];
+        $feat_fields[] = [
+            'key'           => 'field_feat_label_' . $i,
+            'label'         => 'Feature ' . $i . ' Label',
+            'name'          => 'feat_label_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['label'],
+            'instructions'  => 'Small uppercase label above the title (e.g. "Upcoming Race"). Leave blank to hide this box.',
+        ];
+        $feat_fields[] = [
+            'key'           => 'field_feat_title_' . $i,
+            'label'         => 'Feature ' . $i . ' Title',
+            'name'          => 'feat_title_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['title'],
+        ];
+        $feat_fields[] = [
+            'key'           => 'field_feat_text_' . $i,
+            'label'         => 'Feature ' . $i . ' Description',
+            'name'          => 'feat_text_' . $i,
+            'type'          => 'textarea',
+            'rows'          => 2,
+            'default_value' => $d['text'],
+        ];
+        $feat_fields[] = [
+            'key'           => 'field_feat_cta_' . $i,
+            'label'         => 'Feature ' . $i . ' Button Text',
+            'name'          => 'feat_cta_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['cta'],
+        ];
+        $feat_fields[] = [
+            'key'           => 'field_feat_url_' . $i,
+            'label'         => 'Feature ' . $i . ' Link URL',
+            'name'          => 'feat_url_' . $i,
+            'type'          => 'url',
+            'instructions'  => 'Where this box links to.',
+        ];
+        $feat_fields[] = [
+            'key'           => 'field_feat_color_' . $i,
+            'label'         => 'Feature ' . $i . ' Background Color',
+            'name'          => 'feat_color_' . $i,
+            'type'          => 'color_picker',
+            'default_value' => $d['color'],
+        ];
+    }
+
+    acf_add_local_field_group([
+        'key'      => 'group_feature_grid',
+        'title'    => 'Feature Grid (2x2)',
+        'fields'   => $feat_fields,
+        'location' => [
+            [
+                [
+                    'param'    => 'page_type',
+                    'operator' => '==',
+                    'value'    => 'front_page',
+                ],
+            ],
+        ],
+        'menu_order' => 20,
+    ]);
+
+    // --- Testimonials Field Group (Front Page) ---
+    // 6 fixed slots for testimonial quotes
+    $test_fields = [];
+    $test_defaults = [
+        1 => ['quote' => 'EU completely changed how I approach training. The coaches are world-class and the community keeps you coming back.', 'author' => 'Sarah M., Adult Nordic Program'],
+        2 => ['quote' => 'My kids have grown so much through the youth program. They\'ve learned discipline, teamwork, and a love for the outdoors.', 'author' => 'Mike T., Youth Program Parent'],
+        3 => ['quote' => 'The race events are incredibly well organized. From registration to finish line, everything is top-notch.', 'author' => 'Jenna L., Race Participant'],
+        4 => ['quote' => 'I joined as a complete beginner and within a season I was racing competitively. Can\'t recommend EU enough.', 'author' => 'David R., Adult Nordic Program'],
+    ];
+
+    for ($i = 1; $i <= 6; $i++) {
+        $d = isset($test_defaults[$i]) ? $test_defaults[$i] : ['quote' => '', 'author' => ''];
+        $test_fields[] = [
+            'key'   => 'field_test_' . $i . '_tab',
+            'label' => 'Testimonial ' . $i,
+            'type'  => 'tab',
+        ];
+        $test_fields[] = [
+            'key'           => 'field_test_quote_' . $i,
+            'label'         => 'Testimonial ' . $i . ' Quote',
+            'name'          => 'test_quote_' . $i,
+            'type'          => 'textarea',
+            'rows'          => 3,
+            'default_value' => $d['quote'],
+            'instructions'  => 'Leave blank to hide this testimonial.',
+        ];
+        $test_fields[] = [
+            'key'           => 'field_test_author_' . $i,
+            'label'         => 'Testimonial ' . $i . ' Author',
+            'name'          => 'test_author_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['author'],
+            'instructions'  => 'e.g. "Sarah M., Adult Nordic Program"',
+        ];
+    }
+
+    acf_add_local_field_group([
+        'key'      => 'group_testimonials',
+        'title'    => 'Testimonials',
+        'fields'   => $test_fields,
+        'location' => [
+            [
+                [
+                    'param'    => 'page_type',
+                    'operator' => '==',
+                    'value'    => 'front_page',
+                ],
+            ],
+        ],
+        'menu_order' => 30,
+    ]);
+
     // --- Hub Page Fields Field Group ---
     // For summary/hub pages (Nordic, Programs, Urban Trail Series, etc.)
     // Up to 6 showcase cards with title, description, link, image, and color.

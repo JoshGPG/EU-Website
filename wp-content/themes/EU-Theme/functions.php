@@ -567,121 +567,122 @@ function eu_register_acf_field_groups() {
     if (!function_exists('acf_add_local_field_group')) return;
 
     // --- Site Settings Field Group ---
+    // Note: ACF free doesn't support repeaters. Footer links use fixed slots instead.
+    $site_settings_fields = [
+        // Branding
+        [
+            'key'   => 'field_site_slogan',
+            'label' => 'Site Slogan',
+            'name'  => 'site_slogan',
+            'type'  => 'text',
+            'default_value' => 'ACTIVE. HEALTHY. OUTDOORS.',
+            'instructions'  => 'Displayed in the ribbon above the header.',
+        ],
+        // Contact Info
+        [
+            'key'   => 'field_office_email',
+            'label' => 'Office Email',
+            'name'  => 'office_email',
+            'type'  => 'email',
+            'default_value' => 'info@enduranceunited.org',
+        ],
+        [
+            'key'   => 'field_office_phone',
+            'label' => 'Office Phone',
+            'name'  => 'office_phone',
+            'type'  => 'text',
+            'default_value' => '(612) 850-3937',
+        ],
+        [
+            'key'   => 'field_office_address',
+            'label' => 'Office Address',
+            'name'  => 'office_address',
+            'type'  => 'textarea',
+            'rows'  => 3,
+            'default_value' => "713 Minnehaha Ave. East, Suite 216\nSaint Paul, MN 55106, USA",
+        ],
+        // Social URLs
+        [
+            'key'   => 'field_facebook_url',
+            'label' => 'Facebook URL',
+            'name'  => 'facebook_url',
+            'type'  => 'url',
+            'default_value' => 'https://www.facebook.com/EnduranceUntd/',
+        ],
+        [
+            'key'   => 'field_instagram_url',
+            'label' => 'Instagram URL',
+            'name'  => 'instagram_url',
+            'type'  => 'url',
+            'default_value' => 'https://www.instagram.com/enduranceunited/',
+        ],
+        [
+            'key'   => 'field_youtube_url',
+            'label' => 'YouTube URL',
+            'name'  => 'youtube_url',
+            'type'  => 'url',
+            'default_value' => 'https://www.youtube.com/channel/UCsrv65x0Vzscsh3vRJk_PUA',
+        ],
+        // Footer Content
+        [
+            'key'   => 'field_footer_about_text',
+            'label' => 'Footer About Text',
+            'name'  => 'footer_about_text',
+            'type'  => 'textarea',
+            'rows'  => 4,
+            'default_value' => 'Empowering communities through education, athletics, and mentorship. We are committed to developing young leaders on and off the field.',
+            'instructions'  => 'The "About Us" paragraph in the footer.',
+        ],
+    ];
+
+    // Footer Get Involved Links — 4 fixed slots (label + url each)
+    for ($i = 1; $i <= 4; $i++) {
+        $site_settings_fields[] = [
+            'key'   => 'field_get_involved_' . $i . '_tab',
+            'label' => 'Get Involved Link ' . $i,
+            'type'  => 'tab',
+        ];
+        $site_settings_fields[] = [
+            'key'   => 'field_get_involved_label_' . $i,
+            'label' => 'Get Involved Link ' . $i . ' Label',
+            'name'  => 'get_involved_label_' . $i,
+            'type'  => 'text',
+            'instructions' => 'Leave blank to hide this link.',
+        ];
+        $site_settings_fields[] = [
+            'key'   => 'field_get_involved_url_' . $i,
+            'label' => 'Get Involved Link ' . $i . ' URL',
+            'name'  => 'get_involved_url_' . $i,
+            'type'  => 'url',
+        ];
+    }
+
+    // Footer Our Team Links — 4 fixed slots
+    for ($i = 1; $i <= 4; $i++) {
+        $site_settings_fields[] = [
+            'key'   => 'field_our_team_' . $i . '_tab',
+            'label' => 'Our Team Link ' . $i,
+            'type'  => 'tab',
+        ];
+        $site_settings_fields[] = [
+            'key'   => 'field_our_team_label_' . $i,
+            'label' => 'Our Team Link ' . $i . ' Label',
+            'name'  => 'our_team_label_' . $i,
+            'type'  => 'text',
+            'instructions' => 'Leave blank to hide this link.',
+        ];
+        $site_settings_fields[] = [
+            'key'   => 'field_our_team_url_' . $i,
+            'label' => 'Our Team Link ' . $i . ' URL',
+            'name'  => 'our_team_url_' . $i,
+            'type'  => 'url',
+        ];
+    }
+
     acf_add_local_field_group([
         'key'      => 'group_site_settings',
         'title'    => 'Site Settings',
-        'fields'   => [
-            // Branding
-            [
-                'key'   => 'field_site_slogan',
-                'label' => 'Site Slogan',
-                'name'  => 'site_slogan',
-                'type'  => 'text',
-                'default_value' => 'ACTIVE. HEALTHY. OUTDOORS.',
-                'instructions'  => 'Displayed in the ribbon above the header.',
-            ],
-            // Contact Info
-            [
-                'key'   => 'field_office_email',
-                'label' => 'Office Email',
-                'name'  => 'office_email',
-                'type'  => 'email',
-                'default_value' => 'info@enduranceunited.org',
-            ],
-            [
-                'key'   => 'field_office_phone',
-                'label' => 'Office Phone',
-                'name'  => 'office_phone',
-                'type'  => 'text',
-                'default_value' => '(612) 850-3937',
-            ],
-            [
-                'key'   => 'field_office_address',
-                'label' => 'Office Address',
-                'name'  => 'office_address',
-                'type'  => 'textarea',
-                'rows'  => 3,
-                'default_value' => "713 Minnehaha Ave. East, Suite 216\nSaint Paul, MN 55106, USA",
-            ],
-            // Social URLs
-            [
-                'key'   => 'field_facebook_url',
-                'label' => 'Facebook URL',
-                'name'  => 'facebook_url',
-                'type'  => 'url',
-                'default_value' => 'https://www.facebook.com/EnduranceUntd/',
-            ],
-            [
-                'key'   => 'field_instagram_url',
-                'label' => 'Instagram URL',
-                'name'  => 'instagram_url',
-                'type'  => 'url',
-                'default_value' => 'https://www.instagram.com/enduranceunited/',
-            ],
-            [
-                'key'   => 'field_youtube_url',
-                'label' => 'YouTube URL',
-                'name'  => 'youtube_url',
-                'type'  => 'url',
-                'default_value' => 'https://www.youtube.com/channel/UCsrv65x0Vzscsh3vRJk_PUA',
-            ],
-            // Footer Content
-            [
-                'key'   => 'field_footer_about_text',
-                'label' => 'Footer About Text',
-                'name'  => 'footer_about_text',
-                'type'  => 'textarea',
-                'rows'  => 4,
-                'default_value' => 'Empowering communities through education, athletics, and mentorship. We are committed to developing young leaders on and off the field.',
-                'instructions'  => 'The "About Us" paragraph in the footer.',
-            ],
-            // Footer - Get Involved Links (Repeater)
-            [
-                'key'          => 'field_footer_get_involved_links',
-                'label'        => 'Footer Get Involved Links',
-                'name'         => 'footer_get_involved_links',
-                'type'         => 'repeater',
-                'layout'       => 'table',
-                'button_label' => 'Add Link',
-                'sub_fields'   => [
-                    [
-                        'key'   => 'field_get_involved_label',
-                        'label' => 'Label',
-                        'name'  => 'label',
-                        'type'  => 'text',
-                    ],
-                    [
-                        'key'   => 'field_get_involved_url',
-                        'label' => 'URL',
-                        'name'  => 'url',
-                        'type'  => 'url',
-                    ],
-                ],
-            ],
-            // Footer - Our Team Links (Repeater)
-            [
-                'key'          => 'field_footer_our_team_links',
-                'label'        => 'Footer Our Team Links',
-                'name'         => 'footer_our_team_links',
-                'type'         => 'repeater',
-                'layout'       => 'table',
-                'button_label' => 'Add Link',
-                'sub_fields'   => [
-                    [
-                        'key'   => 'field_our_team_label',
-                        'label' => 'Label',
-                        'name'  => 'label',
-                        'type'  => 'text',
-                    ],
-                    [
-                        'key'   => 'field_our_team_url',
-                        'label' => 'URL',
-                        'name'  => 'url',
-                        'type'  => 'url',
-                    ],
-                ],
-            ],
-        ],
+        'fields'   => $site_settings_fields,
         'location' => [
             [
                 [
@@ -695,113 +696,175 @@ function eu_register_acf_field_groups() {
     ]);
 
     // --- Program Page Fields Field Group ---
+    // Uses groups instead of repeaters (ACF free compatible).
+    // Up to 5 program sections and 3 special notes.
+    $program_fields = [
+        [
+            'key'   => 'field_program_subtitle',
+            'label' => 'Subtitle',
+            'name'  => 'program_subtitle',
+            'type'  => 'text',
+            'instructions' => 'Optional subtitle displayed below the page title (e.g. "MyXC affiliated program").',
+        ],
+        [
+            'key'   => 'field_program_intro',
+            'label' => 'Introduction',
+            'name'  => 'program_intro',
+            'type'  => 'wysiwyg',
+            'tabs'  => 'all',
+            'toolbar' => 'full',
+            'media_upload' => 1,
+            'instructions' => 'The introductory description paragraphs for this program.',
+        ],
+    ];
+
+    // Special Notes — 3 fixed slots
+    for ($i = 1; $i <= 3; $i++) {
+        $program_fields[] = [
+            'key'   => 'field_special_note_' . $i,
+            'label' => 'Special Note ' . $i,
+            'name'  => 'special_note_' . $i,
+            'type'  => 'wysiwyg',
+            'tabs'  => 'all',
+            'toolbar' => 'basic',
+            'media_upload' => 0,
+            'instructions' => 'Optional note (e.g. "ski pass required"). Leave blank to skip.',
+        ];
+    }
+
+    // Program Sections — 5 fixed slots (covers paddling's 3, cycling's 2, etc.)
+    for ($i = 1; $i <= 5; $i++) {
+        $program_fields[] = [
+            'key'   => 'field_section_' . $i . '_tab',
+            'label' => 'Section ' . $i,
+            'type'  => 'tab',
+        ];
+        $program_fields[] = [
+            'key'   => 'field_section_title_' . $i,
+            'label' => 'Section ' . $i . ' Title',
+            'name'  => 'section_title_' . $i,
+            'type'  => 'text',
+            'instructions' => 'Leave blank to skip this section.',
+        ];
+        $program_fields[] = [
+            'key'   => 'field_section_description_' . $i,
+            'label' => 'Section ' . $i . ' Description',
+            'name'  => 'section_description_' . $i,
+            'type'  => 'wysiwyg',
+            'tabs'  => 'all',
+            'toolbar' => 'full',
+            'media_upload' => 1,
+            'instructions' => 'Detailed content for this section. Leave blank to show only program boxes.',
+        ];
+        $program_fields[] = [
+            'key'   => 'field_section_group_slug_' . $i,
+            'label' => 'Section ' . $i . ' Program Group Slug',
+            'name'  => 'section_group_slug_' . $i,
+            'type'  => 'text',
+            'instructions' => 'The slug of the Program Group to pull boxes from (e.g. "adult-nordic", "paddling-junior").',
+        ];
+    }
+
+    // Closed section settings (on a separate tab)
+    $program_fields[] = [
+        'key'   => 'field_closed_tab',
+        'label' => 'Closed Section',
+        'type'  => 'tab',
+    ];
+    $program_fields[] = [
+        'key'           => 'field_show_closed_section',
+        'label'         => 'Show Closed Section',
+        'name'          => 'show_closed_section',
+        'type'          => 'true_false',
+        'default_value' => 1,
+        'ui'            => 1,
+        'instructions'  => 'Show the "Closed for the Season" section at the bottom.',
+    ];
+    $program_fields[] = [
+        'key'           => 'field_closed_section_message',
+        'label'         => 'Closed Section Message',
+        'name'          => 'closed_section_message',
+        'type'          => 'text',
+        'default_value' => 'Programs listed below are closed for the season. For late sign-ups please reach out.',
+    ];
+
     acf_add_local_field_group([
         'key'      => 'group_program_page_fields',
         'title'    => 'Program Page Fields',
-        'fields'   => [
-            [
-                'key'   => 'field_program_subtitle',
-                'label' => 'Subtitle',
-                'name'  => 'program_subtitle',
-                'type'  => 'text',
-                'instructions' => 'Optional subtitle displayed below the page title (e.g. "MyXC affiliated program").',
-            ],
-            [
-                'key'   => 'field_program_intro',
-                'label' => 'Introduction',
-                'name'  => 'program_intro',
-                'type'  => 'wysiwyg',
-                'tabs'  => 'all',
-                'toolbar' => 'full',
-                'media_upload' => 1,
-                'instructions' => 'The introductory description paragraphs for this program.',
-            ],
-            [
-                'key'          => 'field_special_notes',
-                'label'        => 'Special Notes',
-                'name'         => 'special_notes',
-                'type'         => 'repeater',
-                'layout'       => 'block',
-                'button_label' => 'Add Note',
-                'instructions' => 'Optional notes like "ski pass required" or age restrictions.',
-                'sub_fields'   => [
-                    [
-                        'key'   => 'field_note_text',
-                        'label' => 'Note',
-                        'name'  => 'note_text',
-                        'type'  => 'wysiwyg',
-                        'tabs'  => 'all',
-                        'toolbar' => 'basic',
-                        'media_upload' => 0,
-                    ],
-                ],
-            ],
-            [
-                'key'          => 'field_program_sections',
-                'label'        => 'Program Sections',
-                'name'         => 'program_sections',
-                'type'         => 'repeater',
-                'layout'       => 'block',
-                'button_label' => 'Add Section',
-                'instructions' => 'Each section represents a program group (e.g. "Junior Paddling", "Adult Canoe Racing").',
-                'sub_fields'   => [
-                    [
-                        'key'   => 'field_section_title',
-                        'label' => 'Section Title',
-                        'name'  => 'section_title',
-                        'type'  => 'text',
-                    ],
-                    [
-                        'key'   => 'field_section_description',
-                        'label' => 'Section Description',
-                        'name'  => 'section_description',
-                        'type'  => 'wysiwyg',
-                        'tabs'  => 'all',
-                        'toolbar' => 'full',
-                        'media_upload' => 1,
-                        'instructions' => 'Detailed content for this section. Leave blank to show only program boxes.',
-                    ],
-                    [
-                        'key'   => 'field_program_group_slug',
-                        'label' => 'Program Group Slug',
-                        'name'  => 'program_group_slug',
-                        'type'  => 'text',
-                        'instructions' => 'The slug of the Program Group taxonomy term to pull program boxes from (e.g. "adult-nordic", "paddling-junior").',
-                    ],
-                ],
-            ],
-            [
-                'key'           => 'field_show_closed_section',
-                'label'         => 'Show Closed Section',
-                'name'          => 'show_closed_section',
-                'type'          => 'true_false',
-                'default_value' => 1,
-                'ui'            => 1,
-                'instructions'  => 'Show the "Closed for the Season" section at the bottom.',
-            ],
-            [
-                'key'           => 'field_closed_section_message',
-                'label'         => 'Closed Section Message',
-                'name'          => 'closed_section_message',
-                'type'          => 'text',
-                'default_value' => 'Programs listed below are closed for the season. For late sign-ups please reach out.',
-                'conditional_logic' => [
-                    [
-                        [
-                            'field'    => 'field_show_closed_section',
-                            'operator' => '==',
-                            'value'    => '1',
-                        ],
-                    ],
-                ],
-            ],
-        ],
+        'fields'   => $program_fields,
         'location' => [
             [
                 [
                     'param'    => 'page_template',
                     'operator' => '==',
                     'value'    => 'template-program.php',
+                ],
+            ],
+        ],
+        'menu_order' => 0,
+    ]);
+
+    // --- Hero Slides Field Group (Front Page) ---
+    // 8 fixed slide slots using individual fields (ACF free compatible)
+    $hero_fields = [];
+    $slide_defaults = [
+        1 => ['title' => 'Welcome to EnduranceUnited', 'subtitle' => 'Pushing limits. Building champions. Join the movement.', 'color' => '#2c3e50'],
+        2 => ['title' => 'Nordic Programs',            'subtitle' => 'Train with the best coaches in cross-country skiing, biathlon, and more.', 'color' => '#1a5276'],
+        3 => ['title' => 'Race Events 2026',           'subtitle' => 'Register now for the upcoming season of competitive endurance events.', 'color' => '#4a235a'],
+        4 => ['title' => 'Youth Development',          'subtitle' => 'Building the next generation of endurance athletes from the ground up.', 'color' => '#1e8449'],
+    ];
+
+    for ($i = 1; $i <= 8; $i++) {
+        $d = isset($slide_defaults[$i]) ? $slide_defaults[$i] : ['title' => '', 'subtitle' => '', 'color' => '#2c3e50'];
+        $hero_fields[] = [
+            'key'   => 'field_slide_' . $i . '_tab',
+            'label' => 'Slide ' . $i,
+            'type'  => 'tab',
+        ];
+        $hero_fields[] = [
+            'key'           => 'field_slide_title_' . $i,
+            'label'         => 'Slide ' . $i . ' Title',
+            'name'          => 'slide_title_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['title'],
+            'instructions'  => 'Leave blank to hide this slide.',
+        ];
+        $hero_fields[] = [
+            'key'           => 'field_slide_subtitle_' . $i,
+            'label'         => 'Slide ' . $i . ' Subtitle',
+            'name'          => 'slide_subtitle_' . $i,
+            'type'          => 'text',
+            'default_value' => $d['subtitle'],
+        ];
+        $hero_fields[] = [
+            'key'           => 'field_slide_image_' . $i,
+            'label'         => 'Slide ' . $i . ' Background Image',
+            'name'          => 'slide_image_' . $i,
+            'type'          => 'image',
+            'return_format' => 'url',
+            'preview_size'  => 'medium',
+            'instructions'  => 'Upload a background image for this slide. The color below is used as a fallback.',
+        ];
+        $hero_fields[] = [
+            'key'           => 'field_slide_bg_color_' . $i,
+            'label'         => 'Slide ' . $i . ' Background Color',
+            'name'          => 'slide_bg_color_' . $i,
+            'type'          => 'color_picker',
+            'default_value' => $d['color'],
+            'instructions'  => 'Shown while image loads or if no image is set.',
+        ];
+    }
+
+    acf_add_local_field_group([
+        'key'      => 'group_hero_slides',
+        'title'    => 'Hero Slider',
+        'fields'   => $hero_fields,
+        'location' => [
+            [
+                [
+                    'param'    => 'page_type',
+                    'operator' => '==',
+                    'value'    => 'front_page',
                 ],
             ],
         ],

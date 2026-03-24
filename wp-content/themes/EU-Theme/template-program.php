@@ -5,15 +5,35 @@
  * A consolidated template for all program pages (Adult Nordic, Juniors, Youth,
  * Paddling, Cycling, Trail Running, etc.). Content is managed via ACF fields
  * in the page editor rather than hardcoded in PHP.
+ *
+ * Uses individual numbered fields (ACF free compatible, no repeaters).
  */
 get_header();
 
 $subtitle       = get_field('program_subtitle');
-$intro           = get_field('program_intro');
-$special_notes   = get_field('special_notes');
-$sections        = get_field('program_sections');
-$show_closed     = get_field('show_closed_section');
-$closed_message  = get_field('closed_section_message');
+$intro          = get_field('program_intro');
+$show_closed    = get_field('show_closed_section');
+$closed_message = get_field('closed_section_message');
+
+// Collect special notes (up to 3 slots)
+$special_notes = [];
+for ($i = 1; $i <= 3; $i++) {
+    $note = get_field('special_note_' . $i);
+    if ($note) $special_notes[] = $note;
+}
+
+// Collect program sections (up to 5 slots)
+$sections = [];
+for ($i = 1; $i <= 5; $i++) {
+    $title = get_field('section_title_' . $i);
+    if ($title) {
+        $sections[] = [
+            'title'       => $title,
+            'description' => get_field('section_description_' . $i),
+            'group_slug'  => get_field('section_group_slug_' . $i),
+        ];
+    }
+}
 ?>
 
 <h1 class="page-title"><?php the_title(); ?></h1>
@@ -28,29 +48,25 @@ $closed_message  = get_field('closed_section_message');
     </div>
 <?php endif; ?>
 
-<?php if (!empty($special_notes)) : ?>
-    <?php foreach ($special_notes as $note) : ?>
-        <div class="nordic-intro">
-            <?php echo wp_kses_post($note['note_text']); ?>
+<?php foreach ($special_notes as $note) : ?>
+    <div class="nordic-intro">
+        <?php echo wp_kses_post($note); ?>
+    </div>
+<?php endforeach; ?>
+
+<?php foreach ($sections as $section) : ?>
+    <h2 class="nordic-section-title"><?php echo esc_html($section['title']); ?></h2>
+
+    <?php if (!empty($section['description'])) : ?>
+        <div class="paddle-program-detail">
+            <?php echo wp_kses_post($section['description']); ?>
         </div>
-    <?php endforeach; ?>
-<?php endif; ?>
+    <?php endif; ?>
 
-<?php if (!empty($sections)) : ?>
-    <?php foreach ($sections as $section) : ?>
-        <h2 class="nordic-section-title"><?php echo esc_html($section['section_title']); ?></h2>
-
-        <?php if (!empty($section['section_description'])) : ?>
-            <div class="paddle-program-detail">
-                <?php echo wp_kses_post($section['section_description']); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!empty($section['program_group_slug'])) : ?>
-            <?php eu_render_program_boxes($section['program_group_slug'], 'open'); ?>
-        <?php endif; ?>
-    <?php endforeach; ?>
-<?php endif; ?>
+    <?php if (!empty($section['group_slug'])) : ?>
+        <?php eu_render_program_boxes($section['group_slug'], 'open'); ?>
+    <?php endif; ?>
+<?php endforeach; ?>
 
 <?php if ($show_closed && !empty($sections)) : ?>
     <h2 class="nordic-section-title closed" style="margin-top: 40px;">Closed for the Season</h2>
@@ -59,8 +75,8 @@ $closed_message  = get_field('closed_section_message');
     <?php endif; ?>
 
     <?php foreach ($sections as $section) : ?>
-        <?php if (!empty($section['program_group_slug'])) : ?>
-            <?php eu_render_program_boxes($section['program_group_slug'], 'closed'); ?>
+        <?php if (!empty($section['group_slug'])) : ?>
+            <?php eu_render_program_boxes($section['group_slug'], 'closed'); ?>
         <?php endif; ?>
     <?php endforeach; ?>
 <?php endif; ?>

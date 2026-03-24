@@ -7,15 +7,33 @@
 // Retrieve ACF option fields (with fallbacks for when ACF isn't populated yet)
 $acf = function_exists('get_field');
 
-$about_text     = $acf ? get_field('footer_about_text', 'option') : '';
-$involved_links = $acf ? get_field('footer_get_involved_links', 'option') : [];
-$team_links     = $acf ? get_field('footer_our_team_links', 'option') : [];
-$email          = $acf ? get_field('office_email', 'option') : '';
-$phone          = $acf ? get_field('office_phone', 'option') : '';
-$address        = $acf ? get_field('office_address', 'option') : '';
-$facebook       = $acf ? get_field('facebook_url', 'option') : '';
-$instagram      = $acf ? get_field('instagram_url', 'option') : '';
-$youtube        = $acf ? get_field('youtube_url', 'option') : '';
+$about_text = $acf ? get_field('footer_about_text', 'option') : '';
+$email      = $acf ? get_field('office_email', 'option') : '';
+$phone      = $acf ? get_field('office_phone', 'option') : '';
+$address    = $acf ? get_field('office_address', 'option') : '';
+$facebook   = $acf ? get_field('facebook_url', 'option') : '';
+$instagram  = $acf ? get_field('instagram_url', 'option') : '';
+$youtube    = $acf ? get_field('youtube_url', 'option') : '';
+
+// Collect Get Involved links from individual fields (slots 1-4)
+$involved_links = [];
+if ($acf) {
+    for ($i = 1; $i <= 4; $i++) {
+        $label = get_field('get_involved_label_' . $i, 'option');
+        $url   = get_field('get_involved_url_' . $i, 'option');
+        if ($label) $involved_links[] = ['label' => $label, 'url' => $url ?: '#'];
+    }
+}
+
+// Collect Our Team links from individual fields (slots 1-4)
+$team_links = [];
+if ($acf) {
+    for ($i = 1; $i <= 4; $i++) {
+        $label = get_field('our_team_label_' . $i, 'option');
+        $url   = get_field('our_team_url_' . $i, 'option');
+        if ($label) $team_links[] = ['label' => $label, 'url' => $url ?: '#'];
+    }
+}
 
 // Fallback defaults (used until the client populates Site Settings)
 if (!$about_text) $about_text = 'Empowering communities through education, athletics, and mentorship. We are committed to developing young leaders on and off the field.';

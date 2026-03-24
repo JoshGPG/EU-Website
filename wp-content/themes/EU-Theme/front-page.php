@@ -54,98 +54,42 @@
     <?php endif; ?>
 </section>
 
-<!-- Popular Programs 4x2 Grid -->
-<section class="showcase-grid">
+<!-- Programs Showcase Grid -->
+<?php
+$featured_query = new WP_Query([
+    'post_type'      => 'eu_program',
+    'posts_per_page' => 8,
+    'post_status'    => 'publish',
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
+    'meta_query'     => [['key' => '_eu_program_featured', 'value' => '1']],
+]);
 
-    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #1a5276;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Year-Round Nordic</h3>
-            <p class="showcase-card-desc">Train with experienced coaches from May through winter. Beginner to advanced skiers welcome.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #2D62A5;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Learn to Ski</h3>
-            <p class="showcase-card-desc">New to cross-country skiing? Start here with beginner-friendly lessons and patient coaches.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/juniors/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #4a235a;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Junior Training</h3>
-            <p class="showcase-card-desc">Competitive training for ages 14&ndash;19. State champions and national qualifiers.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/youth/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #1e8449;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">EU SkiWerx</h3>
-            <p class="showcase-card-desc">Building a love for the outdoors through Nordic skiing for young developmental athletes.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/paddling/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #2c3e50;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Junior Paddling</h3>
-            <p class="showcase-card-desc">Kayak, SUP and canoe throughout the summer at Long Lake. Ages 11&ndash;18.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/paddling/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #B9313A;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Adult Canoe Racing</h3>
-            <p class="showcase-card-desc">Learn competitive canoe racing with pro boats on Long Lake. Adults 18+.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/adult-nordic/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #245089;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Learn to Rollerski</h3>
-            <p class="showcase-card-desc">Get a head start on ski season with spring rollerski technique lessons.</p>
-            <span class="showcase-card-btn">Learn More</span>
-        </div>
-    </a>
-
-    <a href="<?php echo esc_url(site_url('/calendar/')); ?>" class="showcase-card">
-        <span class="showcase-bracket showcase-bracket--tl"></span>
-        <span class="showcase-bracket showcase-bracket--br"></span>
-        <div class="showcase-card-img" style="background-color: #333;"></div>
-        <div class="showcase-card-body">
-            <h3 class="showcase-card-title">Race Calendar</h3>
-            <p class="showcase-card-desc">View upcoming races, training camps, and community events all season long.</p>
-            <span class="showcase-card-btn">View Calendar</span>
-        </div>
-    </a>
-
+if ($featured_query->have_posts()) : ?>
+<section class="showcase-grid" style="--card-count: <?php echo $featured_query->post_count; ?>;">
+    <?php while ($featured_query->have_posts()) : $featured_query->the_post();
+        $thumb     = get_the_post_thumbnail_url(get_the_ID(), 'medium_large');
+        $coach     = get_post_meta(get_the_ID(), '_eu_program_coach', true);
+        $short_desc = get_post_meta(get_the_ID(), '_eu_program_short_desc', true);
+        $page_link = get_post_meta(get_the_ID(), '_eu_program_page_link', true) ?: '#';
+    ?>
+        <a href="<?php echo esc_url($page_link); ?>" class="showcase-card">
+            <div class="showcase-card-img"<?php if ($thumb) : ?> style="background-image: url(<?php echo esc_url($thumb); ?>);"<?php endif; ?>></div>
+            <div class="showcase-card-body">
+                <h3 class="showcase-card-title"><?php the_title(); ?></h3>
+                <?php if ($coach) : ?>
+                    <p class="showcase-card-coach">Coach: <?php echo esc_html($coach); ?></p>
+                <?php endif; ?>
+                <?php if ($short_desc) : ?>
+                    <p class="showcase-card-desc"><?php echo esc_html($short_desc); ?></p>
+                <?php endif; ?>
+                <span class="showcase-card-btn">Learn More &rarr;</span>
+            </div>
+        </a>
+    <?php endwhile; ?>
 </section>
+<?php wp_reset_postdata();
+endif; ?>
 
 <!-- Two Column Boxes -->
 <section class="two-col-boxes">

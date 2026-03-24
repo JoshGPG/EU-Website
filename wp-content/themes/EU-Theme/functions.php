@@ -82,34 +82,6 @@ function mytheme_widgets_init() {
 }
 add_action('widgets_init', 'mytheme_widgets_init');
 
-// --- EU Event Custom Post Type ---
-function eu_register_event_cpt() {
-    $labels = [
-        'name'               => 'Events',
-        'singular_name'      => 'Event',
-        'menu_name'          => 'Events',
-        'add_new'            => 'Add New Event',
-        'add_new_item'       => 'Add New Event',
-        'edit_item'          => 'Edit Event',
-        'new_item'           => 'New Event',
-        'view_item'          => 'View Event',
-        'search_items'       => 'Search Events',
-        'not_found'          => 'No events found',
-        'not_found_in_trash' => 'No events found in Trash',
-    ];
-
-    register_post_type('eu_event', [
-        'labels'        => $labels,
-        'public'        => true,
-        'has_archive'   => true,
-        'rewrite'       => ['slug' => 'events'],
-        'supports'      => ['title', 'editor', 'thumbnail', 'excerpt'],
-        'menu_icon'     => 'dashicons-calendar-alt',
-        'show_in_rest'  => true,
-    ]);
-}
-add_action('init', 'eu_register_event_cpt');
-
 // --- EU Program Custom Post Type ---
 function eu_register_program_cpt() {
     register_post_type('eu_program', [
@@ -129,9 +101,9 @@ function eu_register_program_cpt() {
         'public'       => false,
         'show_ui'      => true,
         'show_in_menu' => true,
-        'supports'     => ['title', 'editor'],
+        'supports'     => ['title', 'editor', 'thumbnail'],
         'menu_icon'    => 'dashicons-clipboard',
-        'show_in_rest' => true,
+        'show_in_rest' => false,
     ]);
 
     register_taxonomy('eu_program_group', 'eu_program', [
@@ -149,28 +121,72 @@ function eu_register_program_cpt() {
 }
 add_action('init', 'eu_register_program_cpt');
 
-// Program meta box (Status + Registration Link)
+// Program meta box
 function eu_program_meta_box() {
-    add_meta_box('eu_program_details', 'Program Details', 'eu_program_meta_box_html', 'eu_program', 'side', 'high');
+    add_meta_box('eu_program_details', 'Program Details', 'eu_program_meta_box_html', 'eu_program', 'normal', 'high');
 }
 add_action('add_meta_boxes', 'eu_program_meta_box');
 
 function eu_program_meta_box_html($post) {
     wp_nonce_field('eu_program_meta_nonce_action', 'eu_program_meta_nonce');
-    $status = get_post_meta($post->ID, '_eu_program_status', true) ?: 'open';
-    $link   = get_post_meta($post->ID, '_eu_program_link', true);
+    $status     = get_post_meta($post->ID, '_eu_program_status', true) ?: 'open';
+    $link       = get_post_meta($post->ID, '_eu_program_link', true);
+    $coach      = get_post_meta($post->ID, '_eu_program_coach', true);
+    $cost       = get_post_meta($post->ID, '_eu_program_cost', true);
+    $schedule   = get_post_meta($post->ID, '_eu_program_schedule', true);
+    $featured   = get_post_meta($post->ID, '_eu_program_featured', true);
+    $short_desc = get_post_meta($post->ID, '_eu_program_short_desc', true);
+    $page_link  = get_post_meta($post->ID, '_eu_program_page_link', true);
     ?>
-    <p>
-        <label for="eu_program_status"><strong>Status</strong></label><br>
-        <select id="eu_program_status" name="eu_program_status" style="width:100%;">
-            <option value="open" <?php selected($status, 'open'); ?>>Open for Registration</option>
-            <option value="closed" <?php selected($status, 'closed'); ?>>Closed for the Season</option>
-        </select>
-    </p>
-    <p>
-        <label for="eu_program_link"><strong>Registration Link</strong></label><br>
-        <input type="url" id="eu_program_link" name="eu_program_link" value="<?php echo esc_attr($link); ?>" style="width:100%;" placeholder="https://...">
-    </p>
+    <table class="form-table" style="margin-top:0;">
+        <tr>
+            <th><label for="eu_program_status">Status</label></th>
+            <td>
+                <select id="eu_program_status" name="eu_program_status" style="width:100%;max-width:400px;">
+                    <option value="open" <?php selected($status, 'open'); ?>>Open for Registration</option>
+                    <option value="closed" <?php selected($status, 'closed'); ?>>Closed for the Season</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="eu_program_coach">Coach</label></th>
+            <td><input type="text" id="eu_program_coach" name="eu_program_coach" value="<?php echo esc_attr($coach); ?>" style="width:100%;max-width:400px;" placeholder="e.g. John Richter"></td>
+        </tr>
+        <tr>
+            <th><label for="eu_program_cost">Cost</label></th>
+            <td><input type="text" id="eu_program_cost" name="eu_program_cost" value="<?php echo esc_attr($cost); ?>" style="width:100%;max-width:400px;" placeholder="e.g. $175 per season"></td>
+        </tr>
+        <tr>
+            <th><label for="eu_program_schedule">Schedule</label></th>
+            <td><input type="text" id="eu_program_schedule" name="eu_program_schedule" value="<?php echo esc_attr($schedule); ?>" style="width:100%;max-width:400px;" placeholder="e.g. Wednesdays 6:00–7:30pm, May–Aug"></td>
+        </tr>
+        <tr>
+            <th><label for="eu_program_link">Registration Link</label></th>
+            <td><input type="url" id="eu_program_link" name="eu_program_link" value="<?php echo esc_attr($link); ?>" style="width:100%;max-width:400px;" placeholder="https://..."></td>
+        </tr>
+    </table>
+
+    <hr>
+    <h4 style="margin-bottom:8px;">Homepage Showcase</h4>
+    <table class="form-table" style="margin-top:0;">
+        <tr>
+            <th><label>Featured</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" name="eu_program_featured" value="1" <?php checked($featured, '1'); ?>>
+                    Show on homepage grid (max 8)
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="eu_program_short_desc">Short Description</label></th>
+            <td><textarea id="eu_program_short_desc" name="eu_program_short_desc" style="width:100%;max-width:400px;" rows="2" maxlength="100" placeholder="Max 100 characters for homepage card"><?php echo esc_textarea($short_desc); ?></textarea></td>
+        </tr>
+        <tr>
+            <th><label for="eu_program_page_link">Program Page Link</label></th>
+            <td><input type="url" id="eu_program_page_link" name="eu_program_page_link" value="<?php echo esc_attr($page_link); ?>" style="width:100%;max-width:400px;" placeholder="https://... (full program page)"></td>
+        </tr>
+    </table>
     <?php
 }
 
@@ -189,6 +205,26 @@ function eu_save_program_meta($post_id) {
     }
     if (isset($_POST['eu_program_link'])) {
         update_post_meta($post_id, '_eu_program_link', esc_url_raw($_POST['eu_program_link']));
+    }
+
+    // Coach / Cost / Schedule
+    if (isset($_POST['eu_program_coach'])) {
+        update_post_meta($post_id, '_eu_program_coach', sanitize_text_field($_POST['eu_program_coach']));
+    }
+    if (isset($_POST['eu_program_cost'])) {
+        update_post_meta($post_id, '_eu_program_cost', sanitize_text_field($_POST['eu_program_cost']));
+    }
+    if (isset($_POST['eu_program_schedule'])) {
+        update_post_meta($post_id, '_eu_program_schedule', sanitize_text_field($_POST['eu_program_schedule']));
+    }
+
+    // Featured / Short Desc / Page Link (homepage showcase)
+    update_post_meta($post_id, '_eu_program_featured', isset($_POST['eu_program_featured']) ? '1' : '0');
+    if (isset($_POST['eu_program_short_desc'])) {
+        update_post_meta($post_id, '_eu_program_short_desc', sanitize_text_field(mb_substr($_POST['eu_program_short_desc'], 0, 100)));
+    }
+    if (isset($_POST['eu_program_page_link'])) {
+        update_post_meta($post_id, '_eu_program_page_link', esc_url_raw($_POST['eu_program_page_link']));
     }
 }
 add_action('save_post_eu_program', 'eu_save_program_meta');
@@ -250,147 +286,11 @@ function eu_render_program_boxes($group_slug, $status = 'open') {
 
 // Flush rewrite rules on theme activation
 function eu_flush_rewrite_rules() {
-    eu_register_event_cpt();
     eu_register_program_cpt();
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'eu_flush_rewrite_rules');
 
-// Auto-create Calendar and Events pages if they don't exist
-function eu_create_pages() {
-    if (get_option('eu_pages_created')) return;
-
-    $pages = [
-        ['title' => 'Calendar',       'slug' => 'calendar',       'template' => 'page-calendar.php'],
-        ['title' => 'Events Listing', 'slug' => 'events-listing', 'template' => 'page-events.php'],
-    ];
-
-    foreach ($pages as $page) {
-        $exists = get_page_by_path($page['slug']);
-        if (!$exists) {
-            $id = wp_insert_post([
-                'post_title'  => $page['title'],
-                'post_name'   => $page['slug'],
-                'post_status' => 'publish',
-                'post_type'   => 'page',
-            ]);
-            if ($id && !is_wp_error($id)) {
-                update_post_meta($id, '_wp_page_template', $page['template']);
-            }
-        }
-    }
-
-    update_option('eu_pages_created', true);
-    flush_rewrite_rules();
-}
-add_action('init', 'eu_create_pages');
-
-// --- Event Details Meta Box ---
-function eu_event_meta_box() {
-    add_meta_box(
-        'eu_event_details',
-        'Event Details',
-        'eu_event_meta_box_html',
-        'eu_event',
-        'side',
-        'high'
-    );
-}
-add_action('add_meta_boxes', 'eu_event_meta_box');
-
-function eu_event_meta_box_html($post) {
-    wp_nonce_field('eu_event_meta_nonce_action', 'eu_event_meta_nonce');
-
-    $date       = get_post_meta($post->ID, '_eu_event_date', true);
-    $start_time = get_post_meta($post->ID, '_eu_event_start_time', true);
-    $end_time   = get_post_meta($post->ID, '_eu_event_end_time', true);
-    $location   = get_post_meta($post->ID, '_eu_event_location', true);
-    $event_type = get_post_meta($post->ID, '_eu_event_type', true);
-    ?>
-    <p>
-        <label for="eu_event_type"><strong>Event Type</strong></label><br>
-        <select id="eu_event_type" name="eu_event_type" style="width:100%;">
-            <option value="other" <?php selected($event_type, 'other'); ?>>Other</option>
-            <option value="race" <?php selected($event_type, 'race'); ?>>Race</option>
-            <option value="practice" <?php selected($event_type, 'practice'); ?>>Practice</option>
-        </select>
-    </p>
-    <p>
-        <label for="eu_event_date"><strong>Event Date</strong></label><br>
-        <input type="date" id="eu_event_date" name="eu_event_date" value="<?php echo esc_attr($date); ?>" style="width:100%;">
-    </p>
-    <p>
-        <label for="eu_event_start_time"><strong>Start Time</strong></label><br>
-        <input type="time" id="eu_event_start_time" name="eu_event_start_time" value="<?php echo esc_attr($start_time); ?>" style="width:100%;">
-    </p>
-    <p>
-        <label for="eu_event_end_time"><strong>End Time</strong></label><br>
-        <input type="time" id="eu_event_end_time" name="eu_event_end_time" value="<?php echo esc_attr($end_time); ?>" style="width:100%;">
-    </p>
-    <p>
-        <label for="eu_event_location"><strong>Location</strong></label><br>
-        <input type="text" id="eu_event_location" name="eu_event_location" value="<?php echo esc_attr($location); ?>" style="width:100%;">
-    </p>
-    <?php
-}
-
-function eu_save_event_meta($post_id) {
-    if (!isset($_POST['eu_event_meta_nonce'])) return;
-    if (!wp_verify_nonce($_POST['eu_event_meta_nonce'], 'eu_event_meta_nonce_action')) return;
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    if (!current_user_can('edit_post', $post_id)) return;
-
-    $fields = ['_eu_event_type', '_eu_event_date', '_eu_event_start_time', '_eu_event_end_time', '_eu_event_location'];
-    $keys   = ['eu_event_type', 'eu_event_date', 'eu_event_start_time', 'eu_event_end_time', 'eu_event_location'];
-
-    foreach ($fields as $i => $meta_key) {
-        if (isset($_POST[$keys[$i]])) {
-            update_post_meta($post_id, $meta_key, sanitize_text_field($_POST[$keys[$i]]));
-        }
-    }
-}
-add_action('save_post_eu_event', 'eu_save_event_meta');
-
-// --- Enqueue Calendar Script (only on Calendar page template) ---
-function eu_enqueue_calendar_assets() {
-    if (!is_page_template('page-calendar.php')) return;
-
-    wp_enqueue_script(
-        'eu-calendar',
-        get_template_directory_uri() . '/js/calendar.js',
-        [],
-        '2.0',
-        true
-    );
-
-    $events_query = new WP_Query([
-        'post_type'      => 'eu_event',
-        'posts_per_page' => -1,
-        'post_status'    => 'publish',
-    ]);
-
-    $events = [];
-    if ($events_query->have_posts()) {
-        while ($events_query->have_posts()) {
-            $events_query->the_post();
-            $id = get_the_ID();
-            $events[] = [
-                'title'     => get_the_title(),
-                'date'      => get_post_meta($id, '_eu_event_date', true),
-                'startTime' => get_post_meta($id, '_eu_event_start_time', true),
-                'endTime'   => get_post_meta($id, '_eu_event_end_time', true),
-                'location'  => get_post_meta($id, '_eu_event_location', true),
-                'eventType' => get_post_meta($id, '_eu_event_type', true) ?: 'other',
-                'excerpt'   => get_the_excerpt(),
-                'url'       => get_permalink(),
-            ];
-        }
-        wp_reset_postdata();
-    }
-
-    wp_localize_script('eu-calendar', 'euCalendarData', ['events' => $events]);
-}
-add_action('wp_enqueue_scripts', 'eu_enqueue_calendar_assets');
 
 // --- News Categories ---
 function eu_create_news_categories() {
@@ -409,20 +309,24 @@ function eu_create_news_categories() {
 add_action('init', 'eu_create_news_categories');
 
 // Auto-create all site pages (consolidated)
-// Program pages use template-program.php; other pages keep their specific templates.
+// Program pages use template-program.php; hub pages use template-hub.php.
 // Each page has its own option flag so it only gets created once.
 function eu_create_site_pages() {
     $pages = [
-        // Non-program pages (keep their specific templates)
+        // Unique pages
         ['title' => 'News',                'slug' => 'news',                'template' => 'page-news.php',              'option' => 'eu_news_page_created'],
-        ['title' => 'Nordic',              'slug' => 'nordic',              'template' => 'page-nordic.php',            'option' => 'eu_nordic_page_created'],
-        ['title' => 'Programs',            'slug' => 'programs',            'template' => 'page-programs.php',          'option' => 'eu_programs_page_created'],
-        ['title' => 'Urban Trail Series',  'slug' => 'urban-trail-series',  'template' => 'page-urban-trail-series.php','option' => 'eu_urban_trail_series_page_created'],
+
+        // Hub pages (use consolidated hub template)
+        ['title' => 'Nordic',              'slug' => 'nordic',              'template' => 'template-hub.php',           'option' => 'eu_nordic_page_created'],
+        ['title' => 'Programs',            'slug' => 'programs',            'template' => 'template-hub.php',           'option' => 'eu_programs_page_created'],
+        ['title' => 'Urban Trail Series',  'slug' => 'urban-trail-series',  'template' => 'template-hub.php',           'option' => 'eu_urban_trail_series_page_created'],
+
+        // Race event pages (keep their specific templates for now — rich content)
         ['title' => 'Go Spring!',          'slug' => 'go-spring',           'template' => 'page-go-spring.php',         'option' => 'eu_go_spring_page_created'],
         ['title' => 'Night Light',         'slug' => 'night-light',         'template' => 'page-night-light.php',       'option' => 'eu_night_light_page_created'],
         ['title' => 'Turkey Day Trail Trot','slug' => 'turkey-day-trail-trot','template' => 'page-turkey-day.php',      'option' => 'eu_turkey_day_page_created'],
 
-        // Program pages (use consolidated template)
+        // Program pages (use consolidated program template)
         ['title' => 'Adult Nordic',  'slug' => 'adult-nordic',  'template' => 'template-program.php', 'option' => 'eu_adult_nordic_page_created'],
         ['title' => 'Juniors',       'slug' => 'juniors',       'template' => 'template-program.php', 'option' => 'eu_juniors_page_created'],
         ['title' => 'Youth',         'slug' => 'youth',         'template' => 'template-program.php', 'option' => 'eu_youth_page_created'],
@@ -870,5 +774,82 @@ function eu_register_acf_field_groups() {
         ],
         'menu_order' => 0,
     ]);
+
+    // --- Hub Page Fields Field Group ---
+    // For summary/hub pages (Nordic, Programs, Urban Trail Series, etc.)
+    // Up to 6 showcase cards with title, description, link, image, and color.
+    $hub_fields = [
+        [
+            'key'   => 'field_hub_intro',
+            'label' => 'Page Introduction',
+            'name'  => 'hub_intro',
+            'type'  => 'textarea',
+            'rows'  => 3,
+            'instructions' => 'A short intro paragraph displayed below the page title.',
+        ],
+    ];
+
+    for ($i = 1; $i <= 6; $i++) {
+        $hub_fields[] = [
+            'key'   => 'field_hub_card_' . $i . '_tab',
+            'label' => 'Card ' . $i,
+            'type'  => 'tab',
+        ];
+        $hub_fields[] = [
+            'key'   => 'field_hub_card_title_' . $i,
+            'label' => 'Card ' . $i . ' Title',
+            'name'  => 'hub_card_title_' . $i,
+            'type'  => 'text',
+            'instructions' => 'Leave blank to hide this card.',
+        ];
+        $hub_fields[] = [
+            'key'   => 'field_hub_card_desc_' . $i,
+            'label' => 'Card ' . $i . ' Description',
+            'name'  => 'hub_card_desc_' . $i,
+            'type'  => 'textarea',
+            'rows'  => 2,
+        ];
+        $hub_fields[] = [
+            'key'   => 'field_hub_card_link_' . $i,
+            'label' => 'Card ' . $i . ' Link',
+            'name'  => 'hub_card_link_' . $i,
+            'type'  => 'url',
+            'instructions' => 'URL this card links to (e.g. the sub-page).',
+        ];
+        $hub_fields[] = [
+            'key'           => 'field_hub_card_image_' . $i,
+            'label'         => 'Card ' . $i . ' Image',
+            'name'          => 'hub_card_image_' . $i,
+            'type'          => 'image',
+            'return_format' => 'url',
+            'preview_size'  => 'medium',
+            'instructions'  => 'Optional card image. If empty, the background color below is used.',
+        ];
+        $hub_fields[] = [
+            'key'           => 'field_hub_card_color_' . $i,
+            'label'         => 'Card ' . $i . ' Background Color',
+            'name'          => 'hub_card_color_' . $i,
+            'type'          => 'color_picker',
+            'default_value' => '#2c3e50',
+            'instructions'  => 'Fallback color when no image is set.',
+        ];
+    }
+
+    acf_add_local_field_group([
+        'key'      => 'group_hub_page_fields',
+        'title'    => 'Hub Page Cards',
+        'fields'   => $hub_fields,
+        'location' => [
+            [
+                [
+                    'param'    => 'page_template',
+                    'operator' => '==',
+                    'value'    => 'template-hub.php',
+                ],
+            ],
+        ],
+        'menu_order' => 0,
+    ]);
+
 }
 add_action('acf/init', 'eu_register_acf_field_groups');

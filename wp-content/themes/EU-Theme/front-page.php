@@ -121,7 +121,7 @@ endif; ?>
         1 => ['label' => 'Upcoming Race',   'title' => 'City of Lakes Loppet',          'text' => 'Check the calendar for the next race and get registered before spots fill up.', 'cta' => 'View Calendar', 'url' => site_url('/events/'), 'color' => '#2D62A5'],
         2 => ['label' => 'Featured Program', 'title' => 'Adult Year-Round Nordic',       'text' => 'Train with experienced coaches year-round. Beginner to advanced skiers welcome.', 'cta' => 'Learn More', 'url' => site_url('/adult-nordic/'), 'color' => '#B9313A'],
         3 => ['label' => 'From the Blog',    'title' => 'Season Recap & What\'s Ahead',  'text' => 'A look back at an incredible season and a preview of what\'s coming next.', 'cta' => 'Read Post', 'url' => site_url('/news/'), 'color' => '#333333'],
-        4 => ['label' => 'Support EU',       'title' => 'Make a Donation',               'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'url' => '#', 'color' => '#245089'],
+        4 => ['label' => 'Support EU',       'title' => 'Make a Donation',               'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'url' => '#', 'color' => '#2D62A5'],
     ];
     for ($i = 1; $i <= 4; $i++) :
         $d     = $feat_defaults[$i];
@@ -144,41 +144,42 @@ endif; ?>
 
 <!-- Testimonials Slider -->
 <?php
-$test_defaults = [
-    1 => ['quote' => 'EU completely changed how I approach training. The coaches are world-class and the community keeps you coming back.', 'author' => 'Sarah M., Adult Nordic Program'],
-    2 => ['quote' => 'My kids have grown so much through the youth program. They\'ve learned discipline, teamwork, and a love for the outdoors.', 'author' => 'Mike T., Youth Program Parent'],
-    3 => ['quote' => 'The race events are incredibly well organized. From registration to finish line, everything is top-notch.', 'author' => 'Jenna L., Race Participant'],
-    4 => ['quote' => 'I joined as a complete beginner and within a season I was racing competitively. Can\'t recommend EU enough.', 'author' => 'David R., Adult Nordic Program'],
-];
-$testimonials = [];
-for ($i = 1; $i <= 6; $i++) {
-    $d     = isset($test_defaults[$i]) ? $test_defaults[$i] : ['quote' => '', 'author' => ''];
-    $quote = get_field('test_quote_' . $i) ?: $d['quote'];
-    if (!$quote) continue;
-    $testimonials[] = [
-        'quote'  => $quote,
-        'author' => get_field('test_author_' . $i) ?: $d['author'],
-    ];
-}
-if (!empty($testimonials)) : ?>
+$testimonial_query = new WP_Query([
+    'post_type'      => 'eu_testimonial',
+    'posts_per_page' => 10,
+    'post_status'    => 'publish',
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+    'meta_query'     => [['key' => '_eu_testimonial_featured', 'value' => '1']],
+]);
+
+if ($testimonial_query->have_posts()) : ?>
 <section class="testimonials">
     <div class="testimonials-inner">
-        <?php foreach ($testimonials as $idx => $t) : ?>
+        <?php $idx = 0; while ($testimonial_query->have_posts()) : $testimonial_query->the_post();
+            $author  = get_post_meta(get_the_ID(), '_eu_testimonial_author', true);
+            $program = get_post_meta(get_the_ID(), '_eu_testimonial_program', true);
+            $byline  = $author;
+            if ($program) $byline .= ', ' . $program;
+        ?>
             <div class="testimonial-slide<?php echo ($idx === 0) ? ' active' : ''; ?>">
-                <p class="testimonial-quote">&ldquo;<?php echo esc_html($t['quote']); ?>&rdquo;</p>
-                <span class="testimonial-author">&mdash; <?php echo esc_html($t['author']); ?></span>
+                <p class="testimonial-quote">&ldquo;<?php echo esc_html(wp_strip_all_tags(get_the_content())); ?>&rdquo;</p>
+                <?php if ($byline) : ?>
+                    <span class="testimonial-author">&mdash; <?php echo esc_html($byline); ?></span>
+                <?php endif; ?>
             </div>
-        <?php endforeach; ?>
+        <?php $idx++; endwhile; ?>
     </div>
-    <?php if (count($testimonials) > 1) : ?>
+    <?php if ($testimonial_query->post_count > 1) : ?>
         <div class="testimonial-dots">
-            <?php for ($i = 0; $i < count($testimonials); $i++) : ?>
+            <?php for ($i = 0; $i < $testimonial_query->post_count; $i++) : ?>
                 <span class="dot<?php echo ($i === 0) ? ' active' : ''; ?>" data-tslide="<?php echo $i; ?>"></span>
             <?php endfor; ?>
         </div>
     <?php endif; ?>
 </section>
-<?php endif; ?>
+<?php wp_reset_postdata();
+endif; ?>
 
 <script>
 (function() {

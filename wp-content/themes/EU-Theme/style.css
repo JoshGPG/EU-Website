@@ -321,64 +321,69 @@ a:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 6px;
-    padding: 6px;
-    background: #f5f0eb;
-    min-height: calc(100vh - 160px);
+    gap: 20px;
+    padding: 40px;
+    background: #fff;
 }
 
 .feature-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 40px 50px;
+    padding: 50px 45px;
     color: #fff;
     text-decoration: none;
-    position: relative;
+    border-radius: 6px;
     overflow: hidden;
-    transition: opacity 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .feature-box:hover {
-    opacity: 0.92;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
     text-decoration: none;
 }
 
 .feature-label {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: 10px;
+    opacity: 0.75;
+    margin-bottom: 14px;
+    color: #fff;
 }
 
 .feature-box h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.6rem;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.7rem;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     color: #fff;
+    line-height: 1.2;
 }
 
 .feature-box p {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 0.95rem;
-    line-height: 1.6;
-    opacity: 0.85;
-    margin-bottom: 18px;
-    max-width: 400px;
+    font-weight: 400;
+    line-height: 1.65;
+    opacity: 0.88;
+    margin-bottom: 22px;
+    color: #fff;
 }
 
 .feature-cta {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
     color: #fff;
     border-bottom: 2px solid rgba(255, 255, 255, 0.5);
     align-self: flex-start;
-    padding-bottom: 2px;
+    padding-bottom: 3px;
+    transition: border-bottom-color 0.2s;
 }
 
 .feature-box:hover .feature-cta {
@@ -500,6 +505,51 @@ a:hover {
 
 .testimonial-dots .dot:hover {
     background: rgba(255, 255, 255, 0.6);
+}
+
+/* Testimonials Listing Page */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 30px;
+}
+
+.testimonial-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #2D62A5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.testimonial-card-quote {
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.testimonial-card-author {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.testimonial-card-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.testimonial-card-program {
+    font-size: 0.8rem;
+    color: #666;
 }
 
 /* Layout */
@@ -1467,10 +1517,12 @@ a:hover {
 @media (max-width: 700px) {
     .feature-grid {
         grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 16px;
     }
 
     .feature-box {
-        padding: 30px 25px;
+        padding: 35px 28px;
     }
 
     .two-col-boxes {

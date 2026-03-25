@@ -66,7 +66,8 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.3');
+    wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.5');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 
@@ -229,6 +230,83 @@ function eu_save_program_meta($post_id) {
 }
 add_action('save_post_eu_program', 'eu_save_program_meta');
 
+// --- EU Testimonial Custom Post Type ---
+function eu_register_testimonial_cpt() {
+    register_post_type('eu_testimonial', [
+        'labels' => [
+            'name'               => 'Testimonials',
+            'singular_name'      => 'Testimonial',
+            'menu_name'          => 'Testimonials',
+            'add_new'            => 'Add New Testimonial',
+            'add_new_item'       => 'Add New Testimonial',
+            'edit_item'          => 'Edit Testimonial',
+            'new_item'           => 'New Testimonial',
+            'view_item'          => 'View Testimonial',
+            'search_items'       => 'Search Testimonials',
+            'not_found'          => 'No testimonials found',
+            'not_found_in_trash' => 'No testimonials found in Trash',
+        ],
+        'public'       => false,
+        'show_ui'      => true,
+        'show_in_menu' => true,
+        'supports'     => ['title', 'editor'],
+        'menu_icon'    => 'dashicons-format-quote',
+        'show_in_rest' => false,
+    ]);
+}
+add_action('init', 'eu_register_testimonial_cpt');
+
+// Testimonial meta box
+function eu_testimonial_meta_box() {
+    add_meta_box('eu_testimonial_details', 'Testimonial Details', 'eu_testimonial_meta_box_html', 'eu_testimonial', 'normal', 'high');
+}
+add_action('add_meta_boxes', 'eu_testimonial_meta_box');
+
+function eu_testimonial_meta_box_html($post) {
+    wp_nonce_field('eu_testimonial_meta_nonce_action', 'eu_testimonial_meta_nonce');
+    $author_name = get_post_meta($post->ID, '_eu_testimonial_author', true);
+    $program     = get_post_meta($post->ID, '_eu_testimonial_program', true);
+    $featured    = get_post_meta($post->ID, '_eu_testimonial_featured', true);
+    ?>
+    <table class="form-table" style="margin-top:0;">
+        <tr>
+            <th><label for="eu_testimonial_author">Author Name</label></th>
+            <td><input type="text" id="eu_testimonial_author" name="eu_testimonial_author" value="<?php echo esc_attr($author_name); ?>" style="width:100%;max-width:400px;" placeholder="e.g. Sarah M."></td>
+        </tr>
+        <tr>
+            <th><label for="eu_testimonial_program">Program / Role</label></th>
+            <td><input type="text" id="eu_testimonial_program" name="eu_testimonial_program" value="<?php echo esc_attr($program); ?>" style="width:100%;max-width:400px;" placeholder="e.g. Adult Nordic Program"></td>
+        </tr>
+        <tr>
+            <th><label>Show on Homepage</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" name="eu_testimonial_featured" value="1" <?php checked($featured, '1'); ?>>
+                    Feature in homepage slider
+                </label>
+            </td>
+        </tr>
+    </table>
+    <p class="description">Use the main editor above to write the testimonial quote.</p>
+    <?php
+}
+
+function eu_save_testimonial_meta($post_id) {
+    if (!isset($_POST['eu_testimonial_meta_nonce'])) return;
+    if (!wp_verify_nonce($_POST['eu_testimonial_meta_nonce'], 'eu_testimonial_meta_nonce_action')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    if (isset($_POST['eu_testimonial_author'])) {
+        update_post_meta($post_id, '_eu_testimonial_author', sanitize_text_field($_POST['eu_testimonial_author']));
+    }
+    if (isset($_POST['eu_testimonial_program'])) {
+        update_post_meta($post_id, '_eu_testimonial_program', sanitize_text_field($_POST['eu_testimonial_program']));
+    }
+    update_post_meta($post_id, '_eu_testimonial_featured', isset($_POST['eu_testimonial_featured']) ? '1' : '0');
+}
+add_action('save_post_eu_testimonial', 'eu_save_testimonial_meta');
+
 // Auto-create program group terms
 function eu_create_program_groups() {
     $groups = [
@@ -287,6 +365,7 @@ function eu_render_program_boxes($group_slug, $status = 'open') {
 // Flush rewrite rules on theme activation
 function eu_flush_rewrite_rules() {
     eu_register_program_cpt();
+    eu_register_testimonial_cpt();
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'eu_flush_rewrite_rules');
@@ -315,6 +394,7 @@ function eu_create_site_pages() {
     $pages = [
         // Unique pages
         ['title' => 'News',                'slug' => 'news',                'template' => 'page-news.php',              'option' => 'eu_news_page_created'],
+        ['title' => 'Testimonials',        'slug' => 'testimonials',        'template' => 'template-testimonials.php',  'option' => 'eu_testimonials_page_created'],
 
         // Hub pages (use consolidated hub template)
         ['title' => 'Nordic',              'slug' => 'nordic',              'template' => 'template-hub.php',           'option' => 'eu_nordic_page_created'],
@@ -851,7 +931,7 @@ function eu_register_acf_field_groups() {
         1 => ['label' => 'Upcoming Race',     'title' => 'City of Lakes Loppet',              'text' => 'Check the calendar for the next race and get registered before spots fill up.', 'cta' => 'View Calendar', 'color' => '#2D62A5'],
         2 => ['label' => 'Featured Program',   'title' => 'Adult Year-Round Nordic',           'text' => 'Train with experienced coaches year-round. Beginner to advanced skiers welcome.', 'cta' => 'Learn More', 'color' => '#B9313A'],
         3 => ['label' => 'From the Blog',      'title' => 'Season Recap & What\'s Ahead',      'text' => 'A look back at an incredible season and a preview of what\'s coming next.', 'cta' => 'Read Post', 'color' => '#333333'],
-        4 => ['label' => 'Support EU',         'title' => 'Make a Donation',                   'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'color' => '#245089'],
+        4 => ['label' => 'Support EU',         'title' => 'Make a Donation',                   'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'color' => '#2D62A5'],
     ];
 
     for ($i = 1; $i <= 4; $i++) {
@@ -921,58 +1001,6 @@ function eu_register_acf_field_groups() {
             ],
         ],
         'menu_order' => 20,
-    ]);
-
-    // --- Testimonials Field Group (Front Page) ---
-    // 6 fixed slots for testimonial quotes
-    $test_fields = [];
-    $test_defaults = [
-        1 => ['quote' => 'EU completely changed how I approach training. The coaches are world-class and the community keeps you coming back.', 'author' => 'Sarah M., Adult Nordic Program'],
-        2 => ['quote' => 'My kids have grown so much through the youth program. They\'ve learned discipline, teamwork, and a love for the outdoors.', 'author' => 'Mike T., Youth Program Parent'],
-        3 => ['quote' => 'The race events are incredibly well organized. From registration to finish line, everything is top-notch.', 'author' => 'Jenna L., Race Participant'],
-        4 => ['quote' => 'I joined as a complete beginner and within a season I was racing competitively. Can\'t recommend EU enough.', 'author' => 'David R., Adult Nordic Program'],
-    ];
-
-    for ($i = 1; $i <= 6; $i++) {
-        $d = isset($test_defaults[$i]) ? $test_defaults[$i] : ['quote' => '', 'author' => ''];
-        $test_fields[] = [
-            'key'   => 'field_test_' . $i . '_tab',
-            'label' => 'Testimonial ' . $i,
-            'type'  => 'tab',
-        ];
-        $test_fields[] = [
-            'key'           => 'field_test_quote_' . $i,
-            'label'         => 'Testimonial ' . $i . ' Quote',
-            'name'          => 'test_quote_' . $i,
-            'type'          => 'textarea',
-            'rows'          => 3,
-            'default_value' => $d['quote'],
-            'instructions'  => 'Leave blank to hide this testimonial.',
-        ];
-        $test_fields[] = [
-            'key'           => 'field_test_author_' . $i,
-            'label'         => 'Testimonial ' . $i . ' Author',
-            'name'          => 'test_author_' . $i,
-            'type'          => 'text',
-            'default_value' => $d['author'],
-            'instructions'  => 'e.g. "Sarah M., Adult Nordic Program"',
-        ];
-    }
-
-    acf_add_local_field_group([
-        'key'      => 'group_testimonials',
-        'title'    => 'Testimonials',
-        'fields'   => $test_fields,
-        'location' => [
-            [
-                [
-                    'param'    => 'page_type',
-                    'operator' => '==',
-                    'value'    => 'front_page',
-                ],
-            ],
-        ],
-        'menu_order' => 30,
     ]);
 
     // --- Hub Page Fields Field Group ---

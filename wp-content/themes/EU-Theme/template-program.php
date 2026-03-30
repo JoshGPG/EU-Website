@@ -14,6 +14,27 @@ $subtitle       = get_field('program_subtitle');
 $intro          = get_field('program_intro');
 $show_closed    = get_field('show_closed_section');
 $closed_message = get_field('closed_section_message');
+$coaches        = get_field('coaches_info');
+$equipment      = get_field('equipment_needs');
+
+// Season-aware description
+$season_start = (int) get_field('season_start_month');
+$season_end   = (int) get_field('season_end_month');
+$current_month = (int) date('n');
+$season_desc   = '';
+
+if ($season_start && $season_end) {
+    // Handle seasons that wrap around the year (e.g. May–April)
+    if ($season_start <= $season_end) {
+        $in_season = ($current_month >= $season_start && $current_month <= $season_end);
+    } else {
+        $in_season = ($current_month >= $season_start || $current_month <= $season_end);
+    }
+
+    $season_desc = $in_season
+        ? get_field('in_season_description')
+        : get_field('off_season_description');
+}
 
 // Collect special notes (up to 3 slots)
 $special_notes = [];
@@ -42,6 +63,12 @@ for ($i = 1; $i <= 5; $i++) {
     <p class="nordic-closed-note"><?php echo esc_html($subtitle); ?></p>
 <?php endif; ?>
 
+<?php if ($season_desc) : ?>
+    <div class="nordic-intro">
+        <?php echo wp_kses_post($season_desc); ?>
+    </div>
+<?php endif; ?>
+
 <?php if ($intro) : ?>
     <div class="nordic-intro">
         <?php echo wp_kses_post($intro); ?>
@@ -53,6 +80,20 @@ for ($i = 1; $i <= 5; $i++) {
         <?php echo wp_kses_post($note); ?>
     </div>
 <?php endforeach; ?>
+
+<?php if ($coaches) : ?>
+    <h2 class="nordic-section-title">Coaches</h2>
+    <div class="paddle-program-detail">
+        <?php echo wp_kses_post($coaches); ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($equipment) : ?>
+    <h2 class="nordic-section-title">Equipment Needs</h2>
+    <div class="paddle-program-detail">
+        <?php echo wp_kses_post($equipment); ?>
+    </div>
+<?php endif; ?>
 
 <?php foreach ($sections as $section) : ?>
     <h2 class="nordic-section-title"><?php echo esc_html($section['title']); ?></h2>

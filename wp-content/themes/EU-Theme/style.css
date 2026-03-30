@@ -97,9 +97,13 @@ a:hover {
 }
 
 /* Dropdown Sub-menus */
+.main-nav .dropdown {
+    position: relative;
+}
+
 .main-nav .submenu {
     display: none;
-    position: absothelute;
+    position: absolute;
     top: 100%;
     left: 0;
     list-style: none;
@@ -1560,5 +1564,140 @@ a:hover {
     .news-filter-tab {
         font-size: 0.8rem;
         padding: 6px 14px;
+    }
+}
+
+/* =====================
+   Program Card Grid
+   ===================== */
+.program-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.program-card-grid--closed {
+    opacity: 0.65;
+}
+
+.program-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.program-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+    transform: translateY(-3px);
+}
+
+.program-card-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e0e0e0;
+}
+
+.program-card-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.program-card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 12px;
+}
+
+.program-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.program-card-coach {
+    color: #2D62A5;
+    font-weight: 600;
+}
+
+.program-card-cost::before {
+    content: "\1F4B2 ";
+}
+
+.program-card-schedule::before {
+    content: "\1F4C5 ";
+}
+
+.program-card-desc {
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.program-card-desc p {
+    margin: 0 0 8px;
+}
+
+.program-card-desc p:last-child {
+    margin-bottom: 0;
+}
+
+.program-card-cta {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #fff;
+    background: #2D62A5;
+    padding: 10px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    align-self: flex-start;
+    transition: background 0.2s;
+}
+
+.program-card-cta:hover {
+    background: #245089;
+    text-decoration: none;
+    color: #fff;
+}
+
+.program-card-grid--closed .program-card-cta {
+    background: #888;
+}
+
+.program-card-grid--closed .program-card-cta:hover {
+    background: #666;
+}
+
+.program-box-empty {
+    color: #888;
+    font-style: italic;
+    padding: 20px 0;
+}
+
+/* Responsive: Program Cards */
+@media (max-width: 700px) {
+    .program-card-grid {
+        grid-template-columns: 1fr;
     }
 }

@@ -67,7 +67,7 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
     wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.5');
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.7');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 
@@ -323,7 +323,7 @@ function eu_create_program_groups() {
 }
 add_action('init', 'eu_create_program_groups');
 
-// Helper: render program box grid for a given group slug and status
+// Helper: render program card grid for a given group slug and status
 function eu_render_program_boxes($group_slug, $status = 'open') {
     $query = new WP_Query([
         'post_type'      => 'eu_program',
@@ -341,21 +341,40 @@ function eu_render_program_boxes($group_slug, $status = 'open') {
         return;
     }
 
-    $closed_class = ($status === 'closed') ? ' program-box-grid--closed' : '';
-    echo '<div class="program-box-grid' . $closed_class . '">';
+    $closed_class = ($status === 'closed') ? ' program-card-grid--closed' : '';
+    echo '<div class="program-card-grid' . $closed_class . '">';
     while ($query->have_posts()) {
         $query->the_post();
-        $link = get_post_meta(get_the_ID(), '_eu_program_link', true);
-        $tag = $link ? 'a' : 'div';
-        $href = $link ? ' href="' . esc_url($link) . '"' : '';
+        $pid      = get_the_ID();
+        $link     = get_post_meta($pid, '_eu_program_link', true);
+        $coach    = get_post_meta($pid, '_eu_program_coach', true);
+        $cost     = get_post_meta($pid, '_eu_program_cost', true);
+        $schedule = get_post_meta($pid, '_eu_program_schedule', true);
+        $thumb    = get_the_post_thumbnail_url($pid, 'medium_large');
         ?>
-        <<?php echo $tag . $href; ?> class="program-box">
-            <h3 class="program-box-title"><?php the_title(); ?></h3>
-            <div class="program-box-desc"><?php echo wp_kses_post(get_the_content()); ?></div>
-            <?php if ($link) : ?>
-                <span class="program-box-cta"><?php echo ($status === 'open') ? 'Register &rarr;' : 'View Details &rarr;'; ?></span>
+        <div class="program-card">
+            <?php if ($thumb) : ?>
+                <div class="program-card-img" style="background-image: url(<?php echo esc_url($thumb); ?>)"></div>
             <?php endif; ?>
-        </<?php echo $tag; ?>>
+            <div class="program-card-body">
+                <h3 class="program-card-title"><?php the_title(); ?></h3>
+                <div class="program-card-meta">
+                    <?php if ($coach) : ?>
+                        <span class="program-card-coach">Coach: <?php echo esc_html($coach); ?></span>
+                    <?php endif; ?>
+                    <?php if ($cost) : ?>
+                        <span class="program-card-cost"><?php echo esc_html($cost); ?></span>
+                    <?php endif; ?>
+                    <?php if ($schedule) : ?>
+                        <span class="program-card-schedule"><?php echo esc_html($schedule); ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="program-card-desc"><?php echo wp_kses_post(get_the_content()); ?></div>
+                <?php if ($link) : ?>
+                    <a href="<?php echo esc_url($link); ?>" class="program-card-cta"><?php echo ($status === 'open') ? 'Register &rarr;' : 'View Details &rarr;'; ?></a>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php
     }
     echo '</div>';
@@ -700,6 +719,92 @@ function eu_register_acf_field_groups() {
             'media_upload' => 1,
             'instructions' => 'The introductory description paragraphs for this program.',
         ],
+    ];
+
+    // Season-aware description fields
+    $month_choices = [
+        '' => '— Not Set —',
+        '1' => 'January', '2' => 'February', '3' => 'March',
+        '4' => 'April', '5' => 'May', '6' => 'June',
+        '7' => 'July', '8' => 'August', '9' => 'September',
+        '10' => 'October', '11' => 'November', '12' => 'December',
+    ];
+    $program_fields[] = [
+        'key'   => 'field_season_tab',
+        'label' => 'Season',
+        'type'  => 'tab',
+    ];
+    $program_fields[] = [
+        'key'           => 'field_season_start_month',
+        'label'         => 'Season Start Month',
+        'name'          => 'season_start_month',
+        'type'          => 'select',
+        'choices'       => $month_choices,
+        'default_value' => '5',
+        'instructions'  => 'The month the new season begins. Leave blank to skip season descriptions.',
+    ];
+    $program_fields[] = [
+        'key'           => 'field_season_end_month',
+        'label'         => 'Season End Month',
+        'name'          => 'season_end_month',
+        'type'          => 'select',
+        'choices'       => $month_choices,
+        'default_value' => '4',
+        'instructions'  => 'The month the season ends.',
+    ];
+    $program_fields[] = [
+        'key'   => 'field_in_season_description',
+        'label' => 'In-Season Description',
+        'name'  => 'in_season_description',
+        'type'  => 'wysiwyg',
+        'tabs'  => 'all',
+        'toolbar' => 'full',
+        'media_upload' => 1,
+        'instructions' => 'Shown during the active season (between start and end months).',
+    ];
+    $program_fields[] = [
+        'key'   => 'field_off_season_description',
+        'label' => 'Off-Season Description',
+        'name'  => 'off_season_description',
+        'type'  => 'wysiwyg',
+        'tabs'  => 'all',
+        'toolbar' => 'full',
+        'media_upload' => 1,
+        'instructions' => 'Shown outside the active season.',
+    ];
+
+    // Coaches section
+    $program_fields[] = [
+        'key'   => 'field_coaches_tab',
+        'label' => 'Coaches',
+        'type'  => 'tab',
+    ];
+    $program_fields[] = [
+        'key'   => 'field_coaches_info',
+        'label' => 'Coaches',
+        'name'  => 'coaches_info',
+        'type'  => 'wysiwyg',
+        'tabs'  => 'all',
+        'toolbar' => 'full',
+        'media_upload' => 1,
+        'instructions' => 'List coaches, their bios, and photos. Leave blank to hide this section.',
+    ];
+
+    // Equipment needs section
+    $program_fields[] = [
+        'key'   => 'field_equipment_tab',
+        'label' => 'Equipment',
+        'type'  => 'tab',
+    ];
+    $program_fields[] = [
+        'key'   => 'field_equipment_needs',
+        'label' => 'Equipment Needs',
+        'name'  => 'equipment_needs',
+        'type'  => 'wysiwyg',
+        'tabs'  => 'all',
+        'toolbar' => 'full',
+        'media_upload' => 1,
+        'instructions' => 'Equipment requirements and recommendations. Leave blank to hide this section.',
     ];
 
     // Special Notes — 3 fixed slots

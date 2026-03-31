@@ -235,47 +235,32 @@ endif; ?>
 
 <script>
     (function () {
-        var slides = document.quer        ectorAll('.hero-slide');
-        var dots = document.querySelect        l('.hero-slider-dots .dot');
-            if (slides.leng         2) return;
-        var curr        = 0;
-        var total = sli            th;
-
-        function goToSlide(index) {
-                slides[current].classList.remove('active'                   dots[curre            sList.remove('active');
-            curre            ex;
-            slides[current].classLi        dd(        ive');
-            dots[current] .clas            d('active');
-        }
-
-        va        mer = setInt        l(function () {
-             g            ((current + 1) % total);
-        }, 15 000);                ts.forEach(function (dot) {
-            dot.addEventLi                k', function () {
-                    goToSlide(parseInt(this.getA ttrib                    )));
-                clearInterval                                       = se        erva    l(funct    ion () {
-                        go ToSli        current + 1) % total);
-                }, 15000);
-            }               });
+        var slides = document.quer                    ectorAll('.hero-slide');
+        var dots = document                                l('.her        ider        s .d            ;
+                if             des.leng             2) retu                    var                 = 0;
+                       al = sli                    
+        funct                  ide(index)                           slides[cur                             emove('acti                                    ts[        e            sList                                   
+            curre                                                 slides[curren t].class                                      ive');
+                                          las                 ('active');
+                                           me                      l(function ()  {
+                                       ((curr                otal                , 15 000)                                             forEach(functi                                             ddEventLi                                                    n () {
+                        g oTo                    nt(this.g                                                            ;
+                    c    learInter val                                                       = se        erva           unct            ()                                   go ToSl             cu            1) % tota                                }, 15000);
+                }                            );
     })();
 
-    // Testimonial slider
-    (function ()               var tSlides = document.        ySelectorAll('.tes        nial-slide');
-        var tDot        document.querySelectorAll('.testim            ts .dot');
-        if (!tSlides.length) return              var tCurrent = 0;
-        var tTotal = tSl            gth;
+    // Testimon                   der
+            ction ()                                tSlides = document.        ySelectorA                                 ial-slide');
+         var                            umen            electo rAll(                                 ts .dot');
+        if (!tSlides.lengt                                       var tCu                                     Tot          t                    h;
 
-        func            oTestimonial(index) {
-            tSlides[t            .classList.remove('active');
-                    s[t        ent].classList.remove('active');
-                  Current = index;
-            tSlides[tCurr        .classList.        'active');
-             tDots[t            .classList.add('active');
-        }
+                                  oTes                ex) {
+                tSli                        t.remove('ac                                     s[t         en                    ove( 'acti                            Curr                
+                     es[t                        tive');
+                    ts[t            .classList.ad d('ac                    }
 
-                        = setInterval(function () {
-            goToTestimonial((tCu                 tTotal);
-        }, 60                  tDots.forEach(function (dot ) {
+                        = setInterval(f                
+                     esti        al((    tCu            }, 60                  tDots.forEach(function (dot ) {
                      ddEventListener('click', function () {
                     goToTesti            arse        this    .getAttr;
                 clearInterval(tTimer);

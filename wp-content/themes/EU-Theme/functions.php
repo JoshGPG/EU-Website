@@ -67,7 +67,7 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
     wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.7');
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.9');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 
@@ -381,10 +381,219 @@ function eu_render_program_boxes($group_slug, $status = 'open') {
     wp_reset_postdata();
 }
 
+// --- EU Staff & Board Custom Post Type ---
+function eu_register_staff_cpt() {
+    register_post_type('eu_staff', [
+        'labels' => [
+            'name'               => 'Staff & Board',
+            'singular_name'      => 'Staff Member',
+            'menu_name'          => 'Staff & Board',
+            'add_new'            => 'Add New Member',
+            'add_new_item'       => 'Add New Staff Member',
+            'edit_item'          => 'Edit Staff Member',
+            'new_item'           => 'New Staff Member',
+            'view_item'          => 'View Staff Member',
+            'search_items'       => 'Search Staff & Board',
+            'not_found'          => 'No staff members found',
+            'not_found_in_trash' => 'No staff members found in Trash',
+        ],
+        'public'       => false,
+        'show_ui'      => true,
+        'show_in_menu' => true,
+        'supports'     => ['title', 'editor', 'thumbnail', 'page-attributes'],
+        'menu_icon'    => 'dashicons-groups',
+        'show_in_rest' => false,
+    ]);
+
+    register_taxonomy('eu_staff_group', 'eu_staff', [
+        'labels' => [
+            'name'          => 'Staff Groups',
+            'singular_name' => 'Staff Group',
+            'add_new_item'  => 'Add New Group',
+            'edit_item'     => 'Edit Group',
+            'search_items'  => 'Search Groups',
+        ],
+        'hierarchical'      => true,
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
+    ]);
+}
+add_action('init', 'eu_register_staff_cpt');
+
+// Staff meta box
+function eu_staff_meta_box() {
+    add_meta_box('eu_staff_details', 'Staff Details', 'eu_staff_meta_box_html', 'eu_staff', 'normal', 'high');
+}
+add_action('add_meta_boxes', 'eu_staff_meta_box');
+
+function eu_staff_meta_box_html($post) {
+    wp_nonce_field('eu_staff_meta_nonce_action', 'eu_staff_meta_nonce');
+    $role  = get_post_meta($post->ID, '_eu_staff_role', true);
+    $email = get_post_meta($post->ID, '_eu_staff_email', true);
+    ?>
+    <table class="form-table" style="margin-top:0;">
+        <tr>
+            <th><label for="eu_staff_role">Role / Title</label></th>
+            <td><input type="text" id="eu_staff_role" name="eu_staff_role" value="<?php echo esc_attr($role); ?>" style="width:100%;max-width:400px;" placeholder="e.g. President, Youth Head Coach, Adult Team Coach: Tuesday West PM"></td>
+        </tr>
+        <tr>
+            <th><label for="eu_staff_email">Email</label></th>
+            <td><input type="email" id="eu_staff_email" name="eu_staff_email" value="<?php echo esc_attr($email); ?>" style="width:100%;max-width:400px;" placeholder="e.g. name@enduranceunited.org (optional)"></td>
+        </tr>
+    </table>
+    <p class="description">Use the main editor above to add a bio (optional). Coaches with bios get a larger featured card. Use the Featured Image to add a photo.</p>
+    <?php
+}
+
+function eu_save_staff_meta($post_id) {
+    if (!isset($_POST['eu_staff_meta_nonce'])) return;
+    if (!wp_verify_nonce($_POST['eu_staff_meta_nonce'], 'eu_staff_meta_nonce_action')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    if (isset($_POST['eu_staff_role'])) {
+        update_post_meta($post_id, '_eu_staff_role', sanitize_text_field($_POST['eu_staff_role']));
+    }
+    if (isset($_POST['eu_staff_email'])) {
+        update_post_meta($post_id, '_eu_staff_email', sanitize_email($_POST['eu_staff_email']));
+    }
+}
+add_action('save_post_eu_staff', 'eu_save_staff_meta');
+
+// Auto-create staff group terms
+function eu_create_staff_groups() {
+    $groups = [
+        'Board of Directors',
+        'Youth Coaches',
+        'Adult Team Coaches',
+        'Adult Learn to Ski Coaches',
+        'Adult Intermediate Ski Coaches',
+        'Junior Coaches',
+        'Mountain Bike Coaches',
+        'Paddle Coaches',
+        'Guest Nordic Coaches',
+    ];
+    foreach ($groups as $name) {
+        if (!term_exists($name, 'eu_staff_group')) {
+            wp_insert_term($name, 'eu_staff_group');
+        }
+    }
+}
+add_action('init', 'eu_create_staff_groups');
+
+// Helper: render a staff/board section for a given group slug
+function eu_render_staff_section($group_slug, $layout = 'auto') {
+    $query = new WP_Query([
+        'post_type'      => 'eu_staff',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'tax_query'      => [['taxonomy' => 'eu_staff_group', 'field' => 'slug', 'terms' => $group_slug]],
+    ]);
+
+    if (!$query->have_posts()) {
+        echo '<p class="program-box-empty">No members listed yet.</p>';
+        wp_reset_postdata();
+        return;
+    }
+
+    // Determine layout: check if any member has a bio (editor content)
+    if ($layout === 'auto') {
+        $has_bio = false;
+        while ($query->have_posts()) {
+            $query->the_post();
+            if (trim(get_the_content())) {
+                $has_bio = true;
+                break;
+            }
+        }
+        $query->rewind_posts();
+        $layout = $has_bio ? 'list' : 'grid';
+    }
+
+    if ($layout === 'grid') {
+        // Compact card grid (board members, coaches without bios)
+        echo '<div class="' . ($group_slug === 'board-of-directors' ? 'board-grid' : 'coaches-grid') . '">';
+        while ($query->have_posts()) {
+            $query->the_post();
+            $pid   = get_the_ID();
+            $role  = get_post_meta($pid, '_eu_staff_role', true);
+            $email = get_post_meta($pid, '_eu_staff_email', true);
+            $thumb = get_the_post_thumbnail_url($pid, 'medium');
+            $is_board = ($group_slug === 'board-of-directors');
+            ?>
+            <div class="<?php echo $is_board ? 'board-card' : 'coach-card'; ?>">
+                <?php if ($thumb) : ?>
+                    <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+                <?php else : ?>
+                    <div class="<?php echo $is_board ? 'board-photo-placeholder' : 'coach-photo-placeholder'; ?>"></div>
+                <?php endif; ?>
+                <?php if ($is_board) : ?>
+                    <h3><?php the_title(); ?></h3>
+                    <?php if ($role) : ?>
+                        <span class="board-role"><?php echo esc_html($role); ?></span>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <div class="coach-info">
+                        <h3><?php the_title(); ?></h3>
+                        <?php if ($role) : ?>
+                            <span class="coach-role"><?php echo esc_html($role); ?></span>
+                        <?php endif; ?>
+                        <?php if ($email) : ?>
+                            <a href="mailto:<?php echo esc_attr($email); ?>" class="coach-email"><?php echo esc_html($email); ?></a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <?php
+        }
+        echo '</div>';
+    } else {
+        // Feature list layout (coaches with bios)
+        echo '<div class="coaches-list">';
+        while ($query->have_posts()) {
+            $query->the_post();
+            $pid     = get_the_ID();
+            $role    = get_post_meta($pid, '_eu_staff_role', true);
+            $email   = get_post_meta($pid, '_eu_staff_email', true);
+            $thumb   = get_the_post_thumbnail_url($pid, 'medium');
+            $content = trim(get_the_content());
+            ?>
+            <div class="coach-feature">
+                <div class="coach-feature-photo">
+                    <?php if ($thumb) : ?>
+                        <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+                    <?php else : ?>
+                        <div class="coach-photo-placeholder"></div>
+                    <?php endif; ?>
+                </div>
+                <div class="coach-feature-info">
+                    <h3><?php the_title(); ?></h3>
+                    <?php if ($role) : ?>
+                        <span class="coach-role"><?php echo esc_html($role); ?></span>
+                    <?php endif; ?>
+                    <?php if ($email) : ?>
+                        <a href="mailto:<?php echo esc_attr($email); ?>" class="coach-email" style="display:block;margin-bottom:10px;"><?php echo esc_html($email); ?></a>
+                    <?php endif; ?>
+                    <?php if ($content) : ?>
+                        <p><?php echo wp_kses_post($content); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php
+        }
+        echo '</div>';
+    }
+
+    wp_reset_postdata();
+}
+
 // Flush rewrite rules on theme activation
 function eu_flush_rewrite_rules() {
     eu_register_program_cpt();
     eu_register_testimonial_cpt();
+    eu_register_staff_cpt();
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'eu_flush_rewrite_rules');
@@ -875,6 +1084,23 @@ function eu_register_acf_field_groups() {
         'name'          => 'closed_section_message',
         'type'          => 'text',
         'default_value' => 'Programs listed below are closed for the season. For late sign-ups please reach out.',
+    ];
+
+    // Additional Information (bottom of page, after gallery)
+    $program_fields[] = [
+        'key'   => 'field_additional_tab',
+        'label' => 'Additional Info',
+        'type'  => 'tab',
+    ];
+    $program_fields[] = [
+        'key'   => 'field_additional_info',
+        'label' => 'Additional Information (Bottom of Page)',
+        'name'  => 'additional_info',
+        'type'  => 'wysiwyg',
+        'tabs'  => 'all',
+        'toolbar' => 'full',
+        'media_upload' => 1,
+        'instructions' => 'Optional content displayed below the photo gallery at the bottom of the page.',
     ];
 
     acf_add_local_field_group([

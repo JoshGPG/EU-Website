@@ -23,18 +23,18 @@ $back_link  = '';
 $back_label = '';
 if ($groups && !is_wp_error($groups)) {
     $group = $groups[0];
-    $page  = get_page_by_path($group->slug);
-    if (!$page) {
+    $hub_page = get_page_by_path($group->slug);
+    if (!$hub_page) {
         // Try shorter slug (e.g. "paddling" from "paddling-junior")
         $slug_parts = explode('-', $group->slug);
-        while (!$page && count($slug_parts) > 1) {
+        while (!$hub_page && count($slug_parts) > 1) {
             array_pop($slug_parts);
-            $page = get_page_by_path(implode('-', $slug_parts));
+            $hub_page = get_page_by_path(implode('-', $slug_parts));
         }
     }
-    if ($page) {
-        $back_link  = get_permalink($page);
-        $back_label = get_the_title($page);
+    if ($hub_page) {
+        $back_link  = get_permalink($hub_page);
+        $back_label = get_the_title($hub_page);
     }
 }
 ?>

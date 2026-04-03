@@ -27,15 +27,15 @@ if ($groups && !is_wp_error($groups)) {
         }
     }
     if ($is_board) {
-        $page = get_page_by_path('board-of-directors');
-        if ($page) {
-            $back_link  = get_permalink($page);
+        $back_page = get_page_by_path('board-of-directors');
+        if ($back_page) {
+            $back_link  = get_permalink($back_page);
             $back_label = 'Board of Directors';
         }
     } else {
-        $page = get_page_by_path('coaches');
-        if ($page) {
-            $back_link  = get_permalink($page);
+        $back_page = get_page_by_path('coaches');
+        if ($back_page) {
+            $back_link  = get_permalink($back_page);
             $back_label = 'Coaches';
         }
     }

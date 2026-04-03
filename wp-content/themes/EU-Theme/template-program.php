@@ -78,6 +78,51 @@ if ($has_manual_sections) {
 }
 ?>
 
+<?php // --- TEMPORARY DEBUG — remove after testing --- ?>
+<?php if (current_user_can('manage_options')) : ?>
+<div style="background:#fff3cd;border:2px solid #ffc107;padding:15px;margin-bottom:20px;border-radius:6px;font-size:0.85rem;">
+    <strong>DEBUG (admin-only):</strong><br>
+    Page slug: <code><?php echo esc_html($auto_slug); ?></code><br>
+    Manual sections found: <code><?php echo $has_manual_sections ? 'YES (' . count($sections) . ')' : 'NO'; ?></code><br>
+    Group slugs being queried: <code><?php echo esc_html(implode(', ', $group_slugs)); ?></code><br>
+    <?php
+    // Check what the taxonomy term looks like
+    $term = get_term_by('slug', $group_slugs[0], 'eu_program_group');
+    if ($term) {
+        echo 'Taxonomy term found: <code>' . esc_html($term->name) . '</code> (slug: <code>' . esc_html($term->slug) . '</code>, ' . $term->count . ' programs assigned)<br>';
+    } else {
+        echo '<span style="color:red;">Taxonomy term "<code>' . esc_html($group_slugs[0]) . '</code>" NOT FOUND in eu_program_group!</span><br>';
+        // List all available terms
+        $all_terms = get_terms(['taxonomy' => 'eu_program_group', 'hide_empty' => false]);
+        if (!is_wp_error($all_terms) && !empty($all_terms)) {
+            echo 'Available group slugs: ';
+            $slugs = [];
+            foreach ($all_terms as $t) {
+                $slugs[] = '<code>' . esc_html($t->slug) . '</code> (' . $t->count . ')';
+            }
+            echo implode(', ', $slugs) . '<br>';
+        }
+    }
+    // Try the actual query
+    $debug_query = new WP_Query([
+        'post_type' => 'eu_program',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'tax_query' => [['taxonomy' => 'eu_program_group', 'field' => 'slug', 'terms' => $group_slugs[0]]],
+    ]);
+    echo 'Programs in this group (any status): <code>' . $debug_query->found_posts . '</code><br>';
+    if ($debug_query->have_posts()) {
+        while ($debug_query->have_posts()) {
+            $debug_query->the_post();
+            $s = get_post_meta(get_the_ID(), '_eu_program_status', true);
+            echo '&nbsp;&nbsp;- ' . esc_html(get_the_title()) . ' (status: <code>' . esc_html($s ?: '[not set]') . '</code>)<br>';
+        }
+        wp_reset_postdata();
+    }
+    ?>
+</div>
+<?php endif; ?>
+
 <h1 class="page-title"><?php the_title(); ?></h1>
 
 <?php if ($subtitle) : ?>

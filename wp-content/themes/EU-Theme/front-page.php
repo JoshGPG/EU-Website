@@ -81,7 +81,7 @@ if ($featured_query->have_posts()): ?>
         $thumb = get_the_post_thumbnail_url(get_the_ID(), 'medium_large');
         $coach = get_post_meta(get_the_ID(), '_eu_program_coach', true);
         $short_desc = get_post_meta(get_the_ID(), '_eu_program_short_desc', true);
-        $page_link = get_post_meta(get_the_ID(), '_eu_program_page_link', true) ?: '#';
+        $page_link = get_post_meta(get_the_ID(), '_eu_program_page_link', true) ?: get_permalink();
 ?>
     <a href="<?php echo esc_url($page_link); ?>" class="showcase-card">
         <div class="showcase-card-img" <?php if ($thumb): ?> style="background-image: url(

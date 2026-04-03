@@ -1700,9 +1700,311 @@ a:hover {
     margin-top: 40px;
 }
 
+/* Program card title links */
+.program-card-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.program-card-title a:hover {
+    color: #2D62A5;
+}
+
+.program-card-cta--details {
+    background: transparent;
+    color: #2D62A5;
+    border: 2px solid #2D62A5;
+}
+
+.program-card-cta--details:hover {
+    background: #2D62A5;
+    color: #fff;
+}
+
 /* Responsive: Program Cards */
 @media (max-width: 700px) {
     .program-card-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* =====================
+   Single Program Detail
+   ===================== */
+
+.program-detail-back {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2D62A5;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+}
+
+.program-detail-back:hover {
+    color: #B9313A;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.program-detail-hero {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.program-detail-status {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 30px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.program-detail-status--open {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.program-detail-status--closed {
+    background: #fce4ec;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.program-detail-meta {
+    background: #f5f5f5;
+    border-left: 4px solid #2D62A5;
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    border-radius: 0 6px 6px 0;
+}
+
+.program-detail-meta-item {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.program-detail-meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.program-detail-meta-item strong {
+    color: #333;
+}
+
+.program-detail-register {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    background: #B9313A;
+    padding: 12px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 12px;
+    transition: background 0.2s;
+}
+
+.program-detail-register:hover {
+    background: #9a2830;
+    text-decoration: none;
+    color: #fff;
+}
+
+.program-detail-register--lg {
+    font-size: 1rem;
+    padding: 14px 36px;
+}
+
+.program-detail-description {
+    margin-bottom: 30px;
+}
+
+.program-detail-cta-section {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.program-detail-cta-section p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 16px;
+}
+
+.program-detail-cta-section--closed {
+    background: #fafafa;
+}
+
+@media (max-width: 700px) {
+    .program-detail-hero {
+        height: 200px;
+        border-radius: 0;
+        margin-left: -20px;
+        margin-right: -20px;
+        width: calc(100% + 40px);
+    }
+
+    .program-detail-meta {
+        padding: 15px 18px;
+    }
+}
+
+/* =====================
+   Single Staff Detail
+   ===================== */
+
+.staff-detail-back {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2D62A5;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+}
+
+.staff-detail-back:hover {
+    color: #B9313A;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.staff-detail-header {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.staff-detail-photo {
+    flex-shrink: 0;
+}
+
+.staff-detail-photo img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.staff-detail-info {
+    flex: 1;
+}
+
+.staff-detail-info .page-title {
+    margin-bottom: 8px;
+}
+
+.staff-detail-role {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2D62A5;
+    background: #eef3fa;
+    padding: 5px 14px;
+    border-radius: 30px;
+    margin-bottom: 12px;
+}
+
+.staff-detail-email {
+    display: block;
+    font-size: 0.9rem;
+    color: #2D62A5;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.staff-detail-email:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.staff-detail-bio {
+    margin-bottom: 30px;
+}
+
+/* Staff card links (on coaches/board pages) */
+a.staff-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+a.staff-card-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Coach feature list: name link + view profile link */
+.coach-feature-info h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.coach-feature-info h3 a:hover {
+    color: #2D62A5;
+}
+
+.staff-view-profile {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #2D62A5;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.staff-view-profile:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Coach name link (in program cards and detail pages) */
+.coach-name-link {
+    color: #2D62A5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.coach-name-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+    .staff-detail-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .staff-detail-photo img {
+        width: 150px;
+        height: 150px;
     }
 }

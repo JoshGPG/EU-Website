@@ -7,6 +7,7 @@ This folder contains all documentation for managing and maintaining the Enduranc
 - [Site Settings](./site-settings.md) — Slogan, contact info, social links, footer content
 - [Managing Programs](./managing-programs.md) — Adding, editing, and organizing program listings
 - [Managing Testimonials](./managing-testimonials.md) — Adding and featuring testimonials
+- [Managing Staff & Board](./managing-staff-and-board.md) — Coaches, board members, and staff
 - [Editing the Home Page](./editing-home-page.md) — Hero slider, feature boxes, showcase grid, testimonials
 - [Editing Program Pages](./editing-program-pages.md) — Adult Nordic, Juniors, Youth, Paddling, Cycling, Trail Running
 - [Editing Hub Pages](./editing-hub-pages.md) — Nordic hub, Programs hub, Urban Trail Series hub

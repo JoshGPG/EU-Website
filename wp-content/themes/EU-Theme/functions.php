@@ -67,7 +67,7 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
     wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '2.9');
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.1');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 
@@ -99,9 +99,11 @@ function eu_register_program_cpt() {
             'not_found'          => 'No programs found',
             'not_found_in_trash' => 'No programs found in Trash',
         ],
-        'public'       => false,
+        'public'       => true,
         'show_ui'      => true,
         'show_in_menu' => true,
+        'has_archive'  => false,
+        'rewrite'      => ['slug' => 'programs', 'with_front' => false],
         'supports'     => ['title', 'editor', 'thumbnail'],
         'menu_icon'    => 'dashicons-clipboard',
         'show_in_rest' => false,
@@ -325,13 +327,25 @@ add_action('init', 'eu_create_program_groups');
 
 // Helper: render program card grid for a given group slug and status
 function eu_render_program_boxes($group_slug, $status = 'open') {
+    // For 'open' status, also include programs with no status set (default = open)
+    if ($status === 'open') {
+        $meta_query = [
+            'relation' => 'OR',
+            ['key' => '_eu_program_status', 'value' => 'open'],
+            ['key' => '_eu_program_status', 'compare' => 'NOT EXISTS'],
+            ['key' => '_eu_program_status', 'value' => ''],
+        ];
+    } else {
+        $meta_query = [['key' => '_eu_program_status', 'value' => $status]];
+    }
+
     $query = new WP_Query([
         'post_type'      => 'eu_program',
         'posts_per_page' => -1,
         'post_status'    => 'publish',
         'orderby'        => 'menu_order',
         'order'          => 'ASC',
-        'meta_query'     => [['key' => '_eu_program_status', 'value' => $status]],
+        'meta_query'     => $meta_query,
         'tax_query'      => [['taxonomy' => 'eu_program_group', 'field' => 'slug', 'terms' => $group_slug]],
     ]);
 
@@ -354,13 +368,15 @@ function eu_render_program_boxes($group_slug, $status = 'open') {
         ?>
         <div class="program-card">
             <?php if ($thumb) : ?>
-                <div class="program-card-img" style="background-image: url(<?php echo esc_url($thumb); ?>)"></div>
+                <a href="<?php echo esc_url(get_permalink()); ?>">
+                    <div class="program-card-img" style="background-image: url(<?php echo esc_url($thumb); ?>)"></div>
+                </a>
             <?php endif; ?>
             <div class="program-card-body">
-                <h3 class="program-card-title"><?php the_title(); ?></h3>
+                <h3 class="program-card-title"><a href="<?php echo esc_url(get_permalink()); ?>"><?php the_title(); ?></a></h3>
                 <div class="program-card-meta">
                     <?php if ($coach) : ?>
-                        <span class="program-card-coach">Coach: <?php echo esc_html($coach); ?></span>
+                        <span class="program-card-coach">Coach: <?php echo eu_coach_link($coach); ?></span>
                     <?php endif; ?>
                     <?php if ($cost) : ?>
                         <span class="program-card-cost"><?php echo esc_html($cost); ?></span>
@@ -370,8 +386,10 @@ function eu_render_program_boxes($group_slug, $status = 'open') {
                     <?php endif; ?>
                 </div>
                 <div class="program-card-desc"><?php echo wp_kses_post(get_the_content()); ?></div>
-                <?php if ($link) : ?>
-                    <a href="<?php echo esc_url($link); ?>" class="program-card-cta"><?php echo ($status === 'open') ? 'Register &rarr;' : 'View Details &rarr;'; ?></a>
+                <?php if ($link && $status === 'open') : ?>
+                    <a href="<?php echo esc_url($link); ?>" class="program-card-cta">Register &rarr;</a>
+                <?php else : ?>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" class="program-card-cta program-card-cta--details">View Details &rarr;</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -397,9 +415,11 @@ function eu_register_staff_cpt() {
             'not_found'          => 'No staff members found',
             'not_found_in_trash' => 'No staff members found in Trash',
         ],
-        'public'       => false,
+        'public'       => true,
         'show_ui'      => true,
         'show_in_menu' => true,
+        'has_archive'  => false,
+        'rewrite'      => ['slug' => 'team', 'with_front' => false],
         'supports'     => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon'    => 'dashicons-groups',
         'show_in_rest' => false,
@@ -481,6 +501,28 @@ function eu_create_staff_groups() {
 }
 add_action('init', 'eu_create_staff_groups');
 
+// Helper: find a staff member by name (for linking coach names to profiles)
+function eu_find_staff_by_name($name) {
+    if (!$name) return null;
+    $posts = get_posts([
+        'post_type'      => 'eu_staff',
+        'posts_per_page' => 1,
+        'post_status'    => 'publish',
+        'title'          => $name,
+    ]);
+    return !empty($posts) ? $posts[0] : null;
+}
+
+// Helper: render a coach name, linked to their profile if they have a staff record
+function eu_coach_link($name) {
+    if (!$name) return '';
+    $staff = eu_find_staff_by_name($name);
+    if ($staff) {
+        return '<a href="' . esc_url(get_permalink($staff)) . '" class="coach-name-link">' . esc_html($name) . '</a>';
+    }
+    return esc_html($name);
+}
+
 // Helper: render a staff/board section for a given group slug
 function eu_render_staff_section($group_slug, $layout = 'auto') {
     $query = new WP_Query([
@@ -523,7 +565,7 @@ function eu_render_staff_section($group_slug, $layout = 'auto') {
             $thumb = get_the_post_thumbnail_url($pid, 'medium');
             $is_board = ($group_slug === 'board-of-directors');
             ?>
-            <div class="<?php echo $is_board ? 'board-card' : 'coach-card'; ?>">
+            <a href="<?php echo esc_url(get_permalink()); ?>" class="<?php echo $is_board ? 'board-card' : 'coach-card'; ?> staff-card-link">
                 <?php if ($thumb) : ?>
                     <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
                 <?php else : ?>
@@ -541,11 +583,11 @@ function eu_render_staff_section($group_slug, $layout = 'auto') {
                             <span class="coach-role"><?php echo esc_html($role); ?></span>
                         <?php endif; ?>
                         <?php if ($email) : ?>
-                            <a href="mailto:<?php echo esc_attr($email); ?>" class="coach-email"><?php echo esc_html($email); ?></a>
+                            <span class="coach-email"><?php echo esc_html($email); ?></span>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
-            </div>
+            </a>
             <?php
         }
         echo '</div>';
@@ -561,15 +603,15 @@ function eu_render_staff_section($group_slug, $layout = 'auto') {
             $content = trim(get_the_content());
             ?>
             <div class="coach-feature">
-                <div class="coach-feature-photo">
+                <a href="<?php echo esc_url(get_permalink()); ?>" class="coach-feature-photo">
                     <?php if ($thumb) : ?>
                         <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
                     <?php else : ?>
                         <div class="coach-photo-placeholder"></div>
                     <?php endif; ?>
-                </div>
+                </a>
                 <div class="coach-feature-info">
-                    <h3><?php the_title(); ?></h3>
+                    <h3><a href="<?php echo esc_url(get_permalink()); ?>"><?php the_title(); ?></a></h3>
                     <?php if ($role) : ?>
                         <span class="coach-role"><?php echo esc_html($role); ?></span>
                     <?php endif; ?>
@@ -579,6 +621,7 @@ function eu_render_staff_section($group_slug, $layout = 'auto') {
                     <?php if ($content) : ?>
                         <p><?php echo wp_kses_post($content); ?></p>
                     <?php endif; ?>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" class="staff-view-profile">View Profile &rarr;</a>
                 </div>
             </div>
             <?php
@@ -597,6 +640,15 @@ function eu_flush_rewrite_rules() {
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'eu_flush_rewrite_rules');
+
+// One-time flush when CPT rewrite rules change
+function eu_maybe_flush_program_rewrite() {
+    if ((int) get_option('eu_program_rewrite_version') < 2) {
+        flush_rewrite_rules();
+        update_option('eu_program_rewrite_version', 2);
+    }
+}
+add_action('init', 'eu_maybe_flush_program_rewrite', 99);
 
 
 // --- News Categories ---
@@ -618,7 +670,16 @@ add_action('init', 'eu_create_news_categories');
 // Auto-create all site pages (consolidated)
 // Program pages use template-program.php; hub pages use template-hub.php.
 // Each page has its own option flag so it only gets created once.
+// Bump this version to force re-check of page templates on existing pages.
 function eu_create_site_pages() {
+    $version = 2;
+    if ((int) get_option('eu_pages_version') < $version) {
+        // Clear all flags so templates get re-assigned on existing pages
+        global $wpdb;
+        $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'eu_%_page_created'");
+        update_option('eu_pages_version', $version);
+    }
+
     $pages = [
         // Unique pages
         ['title' => 'News',                'slug' => 'news',                'template' => 'page-news.php',              'option' => 'eu_news_page_created'],
@@ -647,7 +708,10 @@ function eu_create_site_pages() {
         if (get_option($page['option'])) continue;
 
         $exists = get_page_by_path($page['slug']);
-        if (!$exists) {
+        if ($exists) {
+            // Page already exists — ensure the template is assigned
+            update_post_meta($exists->ID, '_wp_page_template', $page['template']);
+        } else {
             $id = wp_insert_post([
                 'post_title'  => $page['title'],
                 'post_name'   => $page['slug'],

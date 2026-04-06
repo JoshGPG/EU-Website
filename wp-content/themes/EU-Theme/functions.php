@@ -13,6 +13,9 @@ add_action('after_setup_theme', 'mytheme_setup');
 
 // --- Custom Nav Walker (preserves dropdown/submenu CSS classes) ---
 class EU_Nav_Walker extends Walker_Nav_Menu {
+    // UTS page slugs for detection
+    private static $uts_slugs = ['urban-trail-series', 'go-spring', 'night-light', 'turkey-day-trail-trot', 'bluff-tuff'];
+
     // Add 'dropdown' class to <li> elements that have children
     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
         $classes = empty($item->classes) ? [] : (array) $item->classes;
@@ -21,6 +24,12 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
         // Add 'dropdown' class if this item has children (depth 0 only)
         if ($args->walker->has_children && $depth === 0) {
             $classes[] = 'dropdown';
+        }
+
+        // Add 'uts-nav' class to Urban Trail Series menu items
+        $url_path = trim(wp_parse_url($item->url, PHP_URL_PATH), '/');
+        if (in_array($url_path, self::$uts_slugs, true)) {
+            $classes[] = 'uts-nav';
         }
 
         // Preserve any custom CSS classes added via WP Menu admin
@@ -65,11 +74,24 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 }
 
 function mytheme_enqueue_styles() {
-    wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
+    wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap', [], null);
     wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.2');
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.3');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
+
+// Add 'uts-page' body class on Urban Trail Series pages
+function eu_uts_body_class($classes) {
+    if (is_page()) {
+        $slug = get_post_field('post_name', get_the_ID());
+        $uts_slugs = ['urban-trail-series', 'go-spring', 'night-light', 'turkey-day-trail-trot', 'bluff-tuff'];
+        if (in_array($slug, $uts_slugs, true)) {
+            $classes[] = 'uts-page';
+        }
+    }
+    return $classes;
+}
+add_filter('body_class', 'eu_uts_body_class');
 
 function mytheme_widgets_init() {
     register_sidebar([
@@ -1231,6 +1253,20 @@ function eu_register_acf_field_groups() {
             'type'          => 'color_picker',
             'default_value' => $d['color'],
             'instructions'  => 'Shown while image loads or if no image is set.',
+        ];
+        $hero_fields[] = [
+            'key'           => 'field_slide_btn_text_' . $i,
+            'label'         => 'Slide ' . $i . ' Button Text',
+            'name'          => 'slide_btn_text_' . $i,
+            'type'          => 'text',
+            'instructions'  => 'e.g. "Learn More", "Register Now". Leave blank for no button.',
+        ];
+        $hero_fields[] = [
+            'key'           => 'field_slide_btn_url_' . $i,
+            'label'         => 'Slide ' . $i . ' Button Link',
+            'name'          => 'slide_btn_url_' . $i,
+            'type'          => 'url',
+            'instructions'  => 'URL the button links to.',
         ];
     }
 

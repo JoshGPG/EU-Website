@@ -13,10 +13,12 @@ for ($i = 1; $i <= 8; $i++) {
     $title = get_field('slide_title_' . $i);
     if ($title) {
         $slides[] = [
-            'title' => $title,
+            'title'    => $title,
             'subtitle' => get_field('slide_subtitle_' . $i),
-            'image' => get_field('slide_image_' . $i),
+            'image'    => get_field('slide_image_' . $i),
             'bg_color' => get_field('slide_bg_color_' . $i) ?: '#2c3e50',
+            'btn_text' => get_field('slide_btn_text_' . $i),
+            'btn_url'  => get_field('slide_btn_url_' . $i),
         ];
     }
 }
@@ -37,6 +39,11 @@ if (!empty($slides)):
                 <p>
                     <?php echo esc_html($slide['subtitle']); ?>
                 </p>
+                <?php if (!empty($slide['btn_text']) && !empty($slide['btn_url'])) : ?>
+                    <a href="<?php echo esc_url($slide['btn_url']); ?>" class="hero-slide-btn">
+                        <?php echo esc_html($slide['btn_text']); ?> &rarr;
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
         <?php
@@ -170,7 +177,9 @@ for ($i = 1; $i <= 4; $i++):
     $url = get_field('feat_url_' . $i) ?: $d['url'];
     $color = get_field('feat_color_' . $i) ?: $d['color'];
 ?>
+    <?php $is_external = (strpos($url, home_url()) === false && strpos($url, 'http') === 0); ?>
     <a href="<?php echo esc_url($url); ?>" class="feature-box"
+        <?php if ($is_external) echo 'target="_blank" rel="noopener noreferrer"'; ?>
         style="background-color: <?php echo esc_attr($color); ?>;">
         <span class="feature-label">
             <?php echo esc_html($label); ?>

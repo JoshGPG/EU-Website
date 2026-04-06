@@ -60,7 +60,7 @@ if (!$youtube)    $youtube    = 'https://www.youtube.com/channel/UCsrv65x0Vzscsh
                         <li><a href="<?php echo esc_url($link['url']); ?>"><?php echo esc_html($link['label']); ?></a></li>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    <li><a href="https://checkout.square.site/merchant/CR5SR1AYB52YS/checkout/JIDMUSWX6MU3NZEM2LJQ6APV">Donate</a></li>
+                    <li><a href="https://checkout.square.site/merchant/CR5SR1AYB52YS/checkout/JIDMUSWX6MU3NZEM2LJQ6APV" target="_blank" rel="noopener noreferrer">Donate</a></li>
                     <li><a href="#">Volunteer</a></li>
                     <li><a href="#">Careers</a></li>
                     <li><a href="#">Sponsor Us</a></li>

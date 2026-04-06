@@ -1,5 +1,5 @@
 /*
-Theme Name: My Theme
+Theme Name: EU-Theme
 Description: A simple custom PHP theme for learning and experimentation.
 Version: 1.0
 Author: Joshua Rieth
@@ -235,10 +235,10 @@ a:hover {
 }
 
 /* Cap to 4 columns max when 5+ cards */
-.showcase-grid[style*="--card-count: 5"] ,
-.showcase-grid[style*="--card-count: 6"] ,
-.showcase-grid[style*="--card-count: 7"] ,
-.showcase-grid[style*="--card-count: 8"]  {
+.showcase-grid[style*="--card-count: 5"],
+.showcase-grid[style*="--card-count: 6"],
+.showcase-grid[style*="--card-count: 7"],
+.showcase-grid[style*="--card-count: 8"] {
     grid-template-columns: repeat(4, 1fr);
 }
 
@@ -306,6 +306,7 @@ a:hover {
 }
 
 @media (max-width: 1024px) {
+
     .showcase-grid,
     .showcase-grid[style*="--card-count"] {
         grid-template-columns: repeat(2, 1fr);
@@ -313,6 +314,7 @@ a:hover {
 }
 
 @media (max-width: 600px) {
+
     .showcase-grid,
     .showcase-grid[style*="--card-count"] {
         grid-template-columns: 1fr;
@@ -467,8 +469,13 @@ a:hover {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .testimonial-quote {
@@ -1339,11 +1346,115 @@ a:hover {
 /* =====================
    News Page
    ===================== */
+.news-toolbar {
+    margin-bottom: 30px;
+}
+
 .news-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+}
+
+.news-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.news-search {
+    display: flex;
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+}
+
+.news-search-input {
+    flex: 1;
+    padding: 8px 14px;
+    border: 2px solid #ddd;
+    border-right: none;
+    border-radius: 30px 0 0 30px;
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.news-search-input:focus {
+    border-color: #2D62A5;
+}
+
+.news-search-btn {
+    padding: 8px 18px;
+    background: #2D62A5;
+    color: #fff;
+    border: 2px solid #2D62A5;
+    border-radius: 0 30px 30px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.news-search-btn:hover {
+    background: #1e4a7a;
+    border-color: #1e4a7a;
+}
+
+.news-sort {
+    display: flex;
+    gap: 0;
+}
+
+.news-sort-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 8px 16px;
+    border: 2px solid #ddd;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.news-sort-btn:first-child {
+    border-radius: 30px 0 0 30px;
+    border-right: 1px solid #ddd;
+}
+
+.news-sort-btn:last-child {
+    border-radius: 0 30px 30px 0;
+    border-left: 1px solid #ddd;
+}
+
+.news-sort-btn:hover {
+    border-color: #2D62A5;
+    color: #2D62A5;
+    text-decoration: none;
+}
+
+.news-sort-btn.active {
+    background: #2D62A5;
+    border-color: #2D62A5;
+    color: #fff;
+}
+
+.news-search-status {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.news-search-clear {
+    margin-left: 10px;
+    color: #B9313A;
+    font-size: 0.85rem;
 }
 
 .news-filter-tab {
@@ -1564,6 +1675,19 @@ a:hover {
     .news-filter-tab {
         font-size: 0.8rem;
         padding: 6px 14px;
+    }
+
+    .news-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .news-search {
+        max-width: 100%;
+    }
+
+    .news-sort {
+        justify-content: center;
     }
 }
 

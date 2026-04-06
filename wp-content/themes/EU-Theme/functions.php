@@ -67,7 +67,7 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap', [], null);
     wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.1');
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.2');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 
@@ -1326,7 +1326,7 @@ function eu_register_acf_field_groups() {
         1 => ['label' => 'Upcoming Race',     'title' => 'City of Lakes Loppet',              'text' => 'Check the calendar for the next race and get registered before spots fill up.', 'cta' => 'View Calendar', 'color' => '#2D62A5'],
         2 => ['label' => 'Featured Program',   'title' => 'Adult Year-Round Nordic',           'text' => 'Train with experienced coaches year-round. Beginner to advanced skiers welcome.', 'cta' => 'Learn More', 'color' => '#B9313A'],
         3 => ['label' => 'From the Blog',      'title' => 'Season Recap & What\'s Ahead',      'text' => 'A look back at an incredible season and a preview of what\'s coming next.', 'cta' => 'Read Post', 'color' => '#333333'],
-        4 => ['label' => 'Support EU',         'title' => 'Make a Donation',                   'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'color' => '#2D62A5'],
+        4 => ['label' => 'Support EU',         'title' => 'Make a Donation',                   'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'url' => 'https://checkout.square.site/merchant/CR5SR1AYB52YS/checkout/JIDMUSWX6MU3NZEM2LJQ6APV', 'color' => '#2D62A5'],
     ];
 
     for ($i = 1; $i <= 4; $i++) {

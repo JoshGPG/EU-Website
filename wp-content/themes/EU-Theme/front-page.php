@@ -147,11 +147,17 @@ endfor; ?>
 <!-- 2x2 Feature Grid -->
 <section class="feature-grid">
     <?php
+// Pull the latest blog post for the "From the Blog" box
+$latest_post = get_posts(['post_type' => 'post', 'posts_per_page' => 1, 'post_status' => 'publish']);
+$blog_title = $latest_post ? get_the_title($latest_post[0]) : 'Latest News';
+$blog_text  = $latest_post ? wp_trim_words(get_the_excerpt($latest_post[0]), 18, '...') : 'Check out our latest updates and stories from the EU community.';
+$blog_url   = $latest_post ? get_permalink($latest_post[0]) : site_url('/news/');
+
 $feat_defaults = [
     1 => ['label' => 'Upcoming Race', 'title' => 'City of Lakes Loppet', 'text' => 'Check the calendar for the next race and get registered before spots fill up.', 'cta' => 'View Calendar', 'url' => site_url('/events/'), 'color' => '#2D62A5'],
     2 => ['label' => 'Featured Program', 'title' => 'Adult Year-Round Nordic', 'text' => 'Train with experienced coaches year-round. Beginner to advanced skiers welcome.', 'cta' => 'Learn More', 'url' => site_url('/adult-nordic/'), 'color' => '#B9313A'],
-    3 => ['label' => 'From the Blog', 'title' => 'Season Recap & What\'s Ahead', 'text' => 'A look back at an incredible season and a preview of what\'s coming next.', 'cta' => 'Read Post', 'url' => site_url('/news/'), 'color' => '#333333'],
-    4 => ['label' => 'Support EU', 'title' => 'Make a Donation', 'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'url' => '#', 'color' => '#2D62A5'],
+    3 => ['label' => 'From the Blog', 'title' => $blog_title, 'text' => $blog_text, 'cta' => 'Read Post', 'url' => $blog_url, 'color' => '#333333'],
+    4 => ['label' => 'Support EU', 'title' => 'Make a Donation', 'text' => 'Your donations fund scholarships, equipment, trail access, and youth programs so everyone can get outside.', 'cta' => 'Donate Now', 'url' => 'https://checkout.square.site/merchant/CR5SR1AYB52YS/checkout/JIDMUSWX6MU3NZEM2LJQ6APV', 'color' => '#2D62A5'],
 ];
 for ($i = 1; $i <= 4; $i++):
     $d = $feat_defaults[$i];

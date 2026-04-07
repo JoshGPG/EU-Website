@@ -76,7 +76,7 @@ class EU_Nav_Walker extends Walker_Nav_Menu {
 function mytheme_enqueue_styles() {
     wp_enqueue_style('google-fonts-oswald', 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap', [], null);
     wp_enqueue_style('google-fonts-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', [], null);
-    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.3');
+    wp_enqueue_style('mytheme-style', get_stylesheet_uri(), [], '3.4');
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_styles');
 

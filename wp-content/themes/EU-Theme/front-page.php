@@ -249,35 +249,60 @@ if ($testimonial_query->have_posts()): ?>
 endif; ?>
 
 <script>
+    // Hero Slider
     (function () {
-        var slides = document.quer                    ectorAll('.hero-slide');
-        var dots = document                                l('.her        ider        s .d            ;
-                if             des.leng             2) retu                    var                 = 0;
-                       al = sli                    
-        funct                  ide(index)                           slides[cur                             emove('acti                                    ts[        e            sList                                   
-            curre                                                 slides[curren t].class                                      ive');
-                                          las                 ('active');
-                                           me                      l(function ()  {
-                                       ((curr                otal                , 15 000)                                             forEach(functi                                             ddEventLi                                                    n () {
-                        g oTo                    nt(this.g                                                            ;
-                    c    learInter val                                                       = se        erva           unct            ()                                   go ToSl             cu            1) % tota                                }, 15000);
-                }                            );
+        var slides = document.querySelectorAll('.hero-slide');
+        var dots = document.querySelectorAll('.hero-slider-dots .dot');
+        if (slides.length < 2) return;
+        var current = 0;
+        var total = slides.length;
+
+        function goToSlide(index) {
+            slides[current].classList.remove('active');
+            if (dots[current]) dots[current].classList.remove('active');
+            current = index;
+            slides[current].classList.add('active');
+            if (dots[current]) dots[current].classList.add('active');
+        }
+
+        var timer = setInterval(function () {
+            goToSlide((current + 1) % total);
+        }, 6000);
+
+        dots.forEach(function (dot) {
+            dot.addEventListener('click', function () {
+                goToSlide(parseInt(this.getAttribute('data-slide'), 10));
+                clearInterval(timer);
+                timer = setInterval(function () {
+                    goToSlide((current + 1) % total);
+                }, 6000);
+            });
+        });
     })();
 
-    // Testimon                   der
-            ction ()                                tSlides = document.        ySelectorA                                 ial-slide');
-         var                            umen            electo rAll(                                 ts .dot');
-        if (!tSlides.lengt                                       var tCu                                     Tot          t                    h;
+    // Testimonial Slider
+    (function () {
+        var tSlides = document.querySelectorAll('.testimonial-slide');
+        var tDots = document.querySelectorAll('.testimonial-dots .dot');
+        if (!tSlides.length) return;
+        var tCurrent = 0;
+        var tTotal = tSlides.length;
 
-                                  oTes                ex) {
-                tSli                        t.remove('ac                                     s[t         en                    ove( 'acti                            Curr                
-                     es[t                        tive');
-                    ts[t            .classList.ad d('ac                    }
+        function goToTestimonial(index) {
+            tSlides[tCurrent].classList.remove('active');
+            if (tDots[tCurrent]) tDots[tCurrent].classList.remove('active');
+            tCurrent = index;
+            tSlides[tCurrent].classList.add('active');
+            if (tDots[tCurrent]) tDots[tCurrent].classList.add('active');
+        }
 
-                        = setInterval(f                
-                     esti        al((    tCu            }, 60                  tDots.forEach(function (dot ) {
-                     ddEventListener('click', function () {
-                    goToTesti            arse        this    .getAttr;
+        var tTimer = setInterval(function () {
+            goToTestimonial((tCurrent + 1) % tTotal);
+        }, 6000);
+
+        tDots.forEach(function (dot) {
+            dot.addEventListener('click', function () {
+                goToTestimonial(parseInt(this.getAttribute('data-tslide'), 10));
                 clearInterval(tTimer);
                 tTimer = setInterval(function () {
                     goToTestimonial((tCurrent + 1) % tTotal);
